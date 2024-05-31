@@ -1,1 +1,1 @@
-# DevOps Final Project - Task Application A
+# DevOps Final Project - Task Application
