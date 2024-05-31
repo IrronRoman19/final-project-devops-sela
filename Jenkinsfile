@@ -30,7 +30,7 @@ pipeline {
 
         stage('HELM Package Build') {
             steps {
-                sh 'helm package helm'
+                sh 'helm package helm/task-app'
             }
         }
 
