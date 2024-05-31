@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container-main">
+        <header>
+            <h1>Task App</h1>
+        </header>
+    
+        <nav>
+            <a href="/">Main page</a>
+            <a href="/create">+Create task+</a>
+        </nav>
+    
+        <main>
+            <table>
+                <tr>
+                    <th>Full name</th>
+                    <th>Task name</th>
+                    <th>Description</th>
+                    <th>Destination datetime</th>
+                    <th>Datetime of creation</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.full_name }}</td>
+                    <td>{{ task.task_name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.destination }}</td>
+                    <td>{{ task.creation_date }}</td>
+                    {% if not task.completed %}
+                    <td id="status-pending">{{ 'Pending' }}</td>
+                    {% else %}
+                    <td id="status-completed">{{ 'Completed' }}</td>
+                    {% endif %}
+                    <td>
+                        {% if not task.completed %}
+                        <a href="{{ url_for('complete', task_id=str(task._id)) }}" onclick="return confirm('Are you sure you want to finish this task?');">O</a>
+                        {% else %}
+                        <a href="{{ url_for('uncomplete', task_id=str(task._id)) }}" onclick="return confirm('Are you sure you want to uncheck this task?');">V</a>
+                        {% endif %}
+                        <a href="{{ url_for('edit', task_id=str(task._id)) }}">E</a>
+                        <a href="{{ url_for('delete', task_id=str(task._id)) }}" onclick="return confirm('Are you sure you want to delete this task?');">X</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </main>
+    </div>
+</body>
+</html>

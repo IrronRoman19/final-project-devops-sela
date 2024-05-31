@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: task-app
+  template:
+    metadata:
+      labels:
+        app: task-app
+    spec:
+      containers:
+      - name: task-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_APP
+          value: "main.py"
+        - name: FLASK_RUN_HOST
+          value: "0.0.0.0"
+        - name: MONGO_DB_HOST
+          value: "task-db"
+        - name: MONGO_DB_PORT
+          value: "{{ .Values.mongo.service.port }}"
+        - name: MONGO_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-username
+        - name: MONGO_DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secret
+              key: mongo-root-password
+        resources: {{ toYaml .Values.resources | indent 10 }}

@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  repository: irronroman19/task-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 5000
+  nodePort: 30000
+
+mongo:
+  image:
+    repository: mongo
+    tag: "4.4"
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 27017
+    nodePort: 30001
+  auth:
+    rootUsername: mongoadmin
+    rootPassword: secret
+
+persistence:
+  enabled: true
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

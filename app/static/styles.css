@@ -1,0 +1,108 @@
+body,
+html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    font-size: x-large;
+    background: linear-gradient(45deg, cyan, lightblue, white);
+    box-sizing: border-box;
+}
+
+.container-main {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 20% 5% 75%;
+    border: 1px solid black;
+}
+
+.container-main > * {
+    border: 1px solid black;
+  }
+
+header {
+    grid-column: span 6;
+}
+  
+nav {
+    background: linear-gradient(45deg, yellow, lightyellow);
+    grid-column: span 6;
+}
+
+main {
+    grid-column: span 6;
+}
+
+form {
+    background: linear-gradient(45deg, white, lightgreen, lightblue);
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    width: 98%;
+    height: 80%;
+}
+
+.form-div {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+}
+
+.form-input {
+    width: 95%;
+}
+
+.desc-input {
+    width: 95%;
+    height: 50%;
+}
+
+.date-input {
+    width: 95%;
+}
+
+button {
+    width: 95%;
+    font-size: x-large;
+}
+
+h1 {
+    color: navy;
+}
+
+p {
+    font-size: 16px;
+    color: navy;
+}
+
+table, th, tr, td {
+    border: 1px solid black;
+}
+
+table {
+    width: 100%;
+}
+
+th {
+    background-color: darkcyan;
+    color: white;
+}
+
+td {
+    background-color: lightyellow;
+    color: navy;
+}
+
+#status-pending {
+    background-color: gold;
+    color: black;
+}
+
+#status-completed {
+    background-color: green;
+    color: white;
+}

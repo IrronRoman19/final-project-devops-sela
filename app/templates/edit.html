@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container-main">
+        <header>
+            <h1>Task App</h1>
+        </header>
+    
+        <nav>
+            <a href="/">Main page</a>
+            <a href="/create">+Create task+</a>
+        </nav>
+    
+        <main>
+            <form action="{{ url_for('edit', task_id=str(task._id)) }}" method="POST">
+                <h3>Edit task</h3>
+    
+                <div class="form_div">
+                    <label>Full name</label>
+                    <input class="form-input" type="text" name="full_name" value="{{ task.full_name }}" required>
+                </div>
+    
+                <div class="form_div">
+                    <label>Task name</label>
+                    <input class="form-input" type="text" name="task_name" value="{{ task.task_name }}" required>
+                </div>
+    
+                <div class="form_div">
+                    <label>Description</label>
+                    <textarea class="desc-input" row="10" type="text" name="description" required>{{ task.description }}</textarea>
+                </div>
+    
+                <div class="form_div">
+                    <label>Destination datetime</label>
+                    <input class="date-input" type="datetime-local" name="destination" value="{{ task.destination }}" required>
+                </div>
+    
+                <div class="form_div">
+                    <br>
+                    <button type="submit" onclick="return confirm('Are you sure you want to change this task?');">Submit</button>
+                    <a href="/">Return</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
