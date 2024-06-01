@@ -6,11 +6,11 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: env.BRANCH_NAME, url: 'https://github.com/IrronRoman19/final-project-devops-sela'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: env.BRANCH_NAME, url: 'https://github.com/IrronRoman19/final-project-devops-sela'
+        //     }
+        // }
         stage('Build Docker Image') {
             steps {
                 script {
