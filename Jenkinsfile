@@ -2,79 +2,71 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "irronroman19/task-app:latest"
-        // EMAIL_RECIPIENTS = "email@example.com"
+        DOCKER_CREDENTIALS_ID = 'docker-token'
+        DOCKER_IMAGE = 'irronroman19/task-app'
+        // EMAIL_RECIPIENTS = 'project-managers@example.com'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: '${BRANCH_NAME}', url: 'https://github.com/IrronRoman19/final-project-devops-sela.git'
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
+                    docker.build("${DOCKER_IMAGE}:${env.BRANCH_NAME}")
                 }
             }
         }
 
-        stage('Unit Tests') {
-            steps {
-                sh 'pip install -r requirements.txt'
-                sh 'pytest app/tests'
-            }
-        }
-
-        stage('HELM Package Build') {
-            steps {
-                sh 'helm package helm/task-app'
-            }
-        }
-
-        stage('Push to DockerHub') {
-            when {
-                branch 'main'
-            }
+        stage('Run Unit Tests') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                        docker.image(DOCKER_IMAGE).push()
+                    docker.image("${DOCKER_IMAGE}:${env.BRANCH_NAME}").inside {
+                        sh 'pytest tests/'
                     }
                 }
             }
         }
 
-        stage('Release Actions') {
+        stage('Build HELM Package') {
+            steps {
+                sh 'helm package helm-chart/'
+            }
+        }
+
+        stage('Push Docker Image (main branch only)') {
             when {
                 branch 'main'
             }
             steps {
-                echo "Performing release actions..."
-                // Add your release steps here
+                script {
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        docker.image("${DOCKER_IMAGE}:${env.BRANCH_NAME}").push("latest")
+                    }
+                }
             }
         }
     }
 
-    post {
-        always {
-            cleanWs()
-        }
-        // failure {
-        //     mail to: "${EMAIL_RECIPIENTS}",
-        //          subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-        //          body: "Something is wrong with ${env.BRANCH_NAME} branch. Check Jenkins for details."
-        // }
-        // success {
-        //     script {
-        //         if (currentBuild.previousBuild != null && currentBuild.previousBuild.result == 'FAILURE') {
-        //             mail to: "${EMAIL_RECIPIENTS}",
-        //                  subject: "Recovered Pipeline: ${currentBuild.fullDisplayName}",
-        //                  body: "The build for ${env.BRANCH_NAME} has recovered from the previous failure."
-        //         }
-        //     }
-        // }
-    }
+    // post {
+    //     failure {
+    //         mail to: "${EMAIL_RECIPIENTS}",
+    //              subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+    //              body: "Something is wrong with ${env.BUILD_URL}"
+    //     }
+
+    //     success {
+    //         script {
+    //             if (currentBuild.previousBuild?.result == 'FAILURE') {
+    //                 mail to: "${EMAIL_RECIPIENTS}",
+    //                      subject: "Back to Normal: ${currentBuild.fullDisplayName}",
+    //                      body: "The build is back to normal: ${env.BUILD_URL}"
+    //             }
+    //         }
+    //     }
+    // }
 }
