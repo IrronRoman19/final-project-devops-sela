@@ -1,54 +1,73 @@
 pipeline {
     agent any
     environment {
-        DOCKER_CREDENTIALS_ID = 'docker-token'
-        GITHUB_CREDENTIALS_ID = 'git-token'
         DOCKER_IMAGE = 'irronroman19/task-app'
+        DOCKER_CREDENTIALS_ID = 'docker-token'
+        GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
+        // EMAIL_RECIPIENTS = 'project-manager@example.com,developer@example.com'
     }
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                git branch: env.BRANCH_NAME, url: 'https://github.com/IrronRoman19/final-project-devops-sela'
+                git branch: env.BRANCH_NAME, url: "https://github.com/${env.GITHUB_REPO}.git"
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:latest")
+                    dockerImage = docker.build("${env.DOCKER_IMAGE}:latest")
                 }
             }
         }
-        stage('Unit Tests') {
+        stage('Run Unit Tests') {
+            steps {
+                sh 'pytest app/tests'
+            }
+        }
+        stage('Build Helm Package') {
+            steps {
+                sh 'helm package ./helm/task-app'
+            }
+        }
+        stage('Push Docker Image') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
-                    sh 'pytest'
+                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKER_CREDENTIALS_ID) {
+                        dockerImage.push("${env.BRANCH_NAME}-${env.BUILD_ID}")
+                        dockerImage.push('latest')
+                    }
                 }
             }
         }
-        stage('Build HELM Package') {
+        stage('Push Helm Package') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
-                    sh 'helm package ./helm/task-app'
+                    sh 'helm push ./helm/task-app --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD'
                 }
             }
         }
     }
-
     // post {
-    //     failure {
-    //         mail to: "${EMAIL_RECIPIENTS}",
-    //              subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-    //              body: "Something is wrong with ${env.BUILD_URL}"
+    //     always {
+    //         echo 'Sending email notification'
+    //         emailext(
+    //             subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} - ${currentBuild.result}",
+    //             body: """<p>Build ${currentBuild.result}: Job ${env.JOB_NAME} [${env.BUILD_ID}]</p>
+    //                      <p>Check console output at ${env.BUILD_URL}</p>""",
+    //             recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+    //             to: env.EMAIL_RECIPIENTS
+    //         )
     //     }
-
-    //     success {
-    //         script {
-    //             if (currentBuild.previousBuild?.result == 'FAILURE') {
-    //                 mail to: "${EMAIL_RECIPIENTS}",
-    //                      subject: "Back to Normal: ${currentBuild.fullDisplayName}",
-    //                      body: "The build is back to normal: ${env.BUILD_URL}"
-    //             }
-    //         }
+    //     failure {
+    //         mail to: env.EMAIL_RECIPIENTS,
+    //              subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} - FAILED",
+    //              body: "The build has failed. Please check the Jenkins console output for more details."
     //     }
     // }
 }
