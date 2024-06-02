@@ -5,17 +5,17 @@ pipeline {
     agent {
         kubernetes {
             yaml ```
-                apiVersion: v1
-                kind: Pod
-                metadata:
-                name: docker-image-build
-                spec:
-                containers:
-                - name: ez-docker-helm-build
-                    image: ezezeasy/ez-docker-helm-build:1.41
-                    imagePullPolicy: Always
-                    securityContext:
-                    privileged: true
+apiVersion: v1
+kind: Pod
+metadata:
+name: docker-image-build
+spec:
+containers:
+- name: ez-docker-helm-build
+    image: ezezeasy/ez-docker-helm-build:1.41
+    imagePullPolicy: Always
+    securityContext:
+    privileged: true
 
             ```
             // label 'ez-joy-friends'
