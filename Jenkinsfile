@@ -19,8 +19,6 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        // DOCKERHUB_USERNAME = credentials('dockerhub-username')
-        // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
     }
 
     stages {
@@ -30,7 +28,7 @@ pipeline {
                 script {
                     ezEnvSetup.initEnv()
                     def id = ezUtils.getUniqueBuildIdentifier()
-                    if(env.BRANCH_NAME == 'main') {
+                    if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
                         env.BUILD_ID = "0." + ezUtils.getUniqueBuildIdentifier("issueNumber") + "." + id
@@ -86,7 +84,6 @@ pipeline {
             }
             steps {
                 script {
-                    // sh "helm push ./helm/task-app --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD"
                     sh "helm push ./helm/task-app"
                 }
             }
