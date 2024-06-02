@@ -4,7 +4,6 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        // EMAIL_RECIPIENTS = 'project-manager@example.com,developer@example.com'
     }
     stages {
         stage('Clone Repository') {
@@ -53,21 +52,4 @@ pipeline {
             }
         }
     }
-    // post {
-    //     always {
-    //         echo 'Sending email notification'
-    //         emailext(
-    //             subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} - ${currentBuild.result}",
-    //             body: """<p>Build ${currentBuild.result}: Job ${env.JOB_NAME} [${env.BUILD_ID}]</p>
-    //                      <p>Check console output at ${env.BUILD_URL}</p>""",
-    //             recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-    //             to: env.EMAIL_RECIPIENTS
-    //         )
-    //     }
-    //     failure {
-    //         mail to: env.EMAIL_RECIPIENTS,
-    //              subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} - FAILED",
-    //              body: "The build has failed. Please check the Jenkins console output for more details."
-    //     }
-    // }
 }
