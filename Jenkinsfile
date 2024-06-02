@@ -28,7 +28,7 @@ pipeline {
                 script {
                     ezEnvSetup.initEnv()
                     def id = ezUtils.getUniqueBuildIdentifier()
-                    if (env.BRANCH_NAME == 'main') {
+                    if(env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
                         env.BUILD_ID = "0." + ezUtils.getUniqueBuildIdentifier("issueNumber") + "." + id
