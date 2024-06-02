@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Run Unit Tests') {
             steps {
-                sh 'pytest app/tests'
+                sh 'pytest app'
             }
         }
         stage('Build Helm Package') {
