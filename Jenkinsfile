@@ -1,15 +1,14 @@
-@Library('EZJEL') _
-
 def dockerImage
 pipeline {
     agent {
-        kubernetes {
-            label 'docker-image-deploy'
+            kubernetes {
+            label 'ez-joy-friends'
             idleMinutes 5
-            yamlFile './build-pod.yaml'
+            yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
     }
+
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -19,8 +18,6 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        // DOCKERHUB_USERNAME = credentials('dockerhub-username')
-        // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
     }
 
     stages {
@@ -86,7 +83,6 @@ pipeline {
             }
             steps {
                 script {
-                    // sh "helm push ./helm/task-app --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD"
                     sh "helm push ./helm/task-app"
                 }
             }

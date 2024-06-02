@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: ez-docker-helm-build
-      image: irronroman19/task-app:latest
+      image: ezezeasy/ez-docker-helm-build:1.41
       command:
         - cat
       tty: true
