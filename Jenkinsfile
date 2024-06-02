@@ -1,4 +1,4 @@
-@Library('EZJEL') _
+@Library('EZJEL@version') _
 
 def dockerImage
 pipeline {
