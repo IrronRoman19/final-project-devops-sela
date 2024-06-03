@@ -1,18 +1,18 @@
 def dockerImage
+
 pipeline {
     agent {
         kubernetes {
-        label 'jenkins-agent-pod'
-        idleMinutes 1
-        yamlFile 'build-pod.yaml'
-        defaultContainer 'ez-docker-helm-build'
+            label 'jenkins-agent-pod'
+            idleMinutes 5
+            yamlFile 'jenkins-agent-build-pod.yaml'
+            defaultContainer 'ez-docker-helm-build'
         }
     }
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '1'))
+        buildDiscarder(logRotator(numToKeepStr: '5'))
     }
-
 
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
@@ -25,12 +25,25 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    ezEnvSetup.initEnv()
-                    def id = ezUtils.getUniqueBuildIdentifier()
-                    if(env.BRANCH_NAME == 'main') {
+                    // Define inline environment setup and utility functions
+                    def initEnv = {
+                        // Placeholder for environment setup logic
+                        echo 'Environment setup initialized'
+                    }
+
+                    def getUniqueBuildIdentifier = {
+                        // Generate a unique identifier, e.g., timestamp
+                        return System.currentTimeMillis().toString()
+                    }
+
+                    // Initialize environment
+                    initEnv()
+
+                    def id = getUniqueBuildIdentifier()
+                    if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
-                        env.BUILD_ID = "0." + ezUtils.getUniqueBuildIdentifier("issueNumber") + "." + id
+                        env.BUILD_ID = "0." + getUniqueBuildIdentifier() + "." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
