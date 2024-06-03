@@ -6,7 +6,6 @@ pipeline {
             idleMinutes 5
             yamlFile 'jenkins-agent-build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
-            namespace 'jenkins'
         }
     }
 
