@@ -67,7 +67,7 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                sh 'pytest app'
+                sh 'pytest ./app'
             }
         }
 
