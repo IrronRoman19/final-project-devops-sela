@@ -4,7 +4,7 @@ pipeline {
         kubernetes {
             label 'jenkins-agent-pod'
             idleMinutes 5
-            yamlFile 'jenkins-agent-build-pod.yaml'
+            yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
     }
