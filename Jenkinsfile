@@ -66,9 +66,6 @@ pipeline {
         }
 
         stage('Run Unit Tests') {
-            when {
-                branch 'main'
-            }
             steps {
                 sh 'pytest ./app'
             }
