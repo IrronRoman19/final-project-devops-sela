@@ -1,18 +1,18 @@
 def dockerImage
 pipeline {
     agent {
-            kubernetes {
-            label 'jenkins-agent-pod'
-            idleMinutes 1
-            yamlFile 'build-pod.yaml'
-            defaultContainer 'ez-docker-helm-build'
+        kubernetes {
+        label 'ez-joy-friends'
+        idleMinutes 1
+        yamlFile 'build-pod.yaml'
+        defaultContainer 'ez-docker-helm-build'
         }
     }
-
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '1'))
     }
+
 
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
