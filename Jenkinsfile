@@ -1,18 +1,18 @@
 def dockerImage
-
 pipeline {
     agent {
         kubernetes {
-            label 'jenkins-agent-pod'
-            idleMinutes 5
-            yamlFile 'jenkins-agent-build-pod.yaml'
-            defaultContainer 'ez-docker-helm-build'
+        label 'jenkins-agent-pod'
+        idleMinutes 1
+        yamlFile 'build-pod.yaml'
+        defaultContainer 'ez-docker-helm-build'
         }
     }
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '1'))
     }
+
 
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
@@ -39,11 +39,12 @@ pipeline {
                     // Initialize environment
                     initEnv()
 
-                    def id = getUniqueBuildIdentifier()
-                    if (env.BRANCH_NAME == 'main') {
+                    ezEnvSetup.initEnv()
+                    def id = ezUtils.getUniqueBuildIdentifier()
+                    if(env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
-                        env.BUILD_ID = "0." + getUniqueBuildIdentifier() + "." + id
+                        env.BUILD_ID = "0." + ezUtils.getUniqueBuildIdentifier("issueNumber") + "." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
