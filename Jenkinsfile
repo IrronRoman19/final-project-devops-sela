@@ -2,7 +2,7 @@ def dockerImage
 pipeline {
     agent {
         kubernetes {
-        label 'ez-joy-friends'
+        label 'jenkins-agent-pod'
         idleMinutes 1
         yamlFile 'build-pod.yaml'
         defaultContainer 'ez-docker-helm-build'
