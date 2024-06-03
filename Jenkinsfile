@@ -67,7 +67,8 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                sh 'pytest ./app/tests'
+                sh 'pip install pytest'
+                sh 'pytest app'
             }
         }
 
