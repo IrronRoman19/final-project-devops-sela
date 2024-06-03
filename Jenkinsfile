@@ -1,7 +1,7 @@
 def dockerImage
 pipeline {
     agent {
-        kubernetes {
+            kubernetes {
             label 'jenkins-agent-pod'
             idleMinutes 5
             yamlFile 'build-pod.yaml'
