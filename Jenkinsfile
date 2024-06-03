@@ -3,7 +3,7 @@ pipeline {
     agent {
             kubernetes {
             label 'jenkins-agent-pod'
-            idleMinutes 5
+            idleMinutes 1
             yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
@@ -11,7 +11,7 @@ pipeline {
 
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '1'))
     }
 
     environment {
