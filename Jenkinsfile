@@ -2,17 +2,16 @@ def dockerImage
 pipeline {
     agent {
         kubernetes {
-        label 'jenkins-agent-pod'
-        idleMinutes 1
-        yamlFile 'build-pod.yaml'
-        defaultContainer 'ez-docker-helm-build'
+            label 'jenkins-agent-pod'
+            idleMinutes 1
+            yamlFile 'build-pod.yaml'
+            defaultContainer 'ez-docker-helm-build'
         }
     }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '1'))
     }
-
 
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
@@ -31,20 +30,21 @@ pipeline {
                         echo 'Environment setup initialized'
                     }
 
-                    def getUniqueBuildIdentifier = {
+                    def getUniqueBuildIdentifier = { suffix = '' ->
                         // Generate a unique identifier, e.g., timestamp
-                        return System.currentTimeMillis().toString()
+                        return System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '')
                     }
 
                     // Initialize environment
                     initEnv()
 
-                    ezEnvSetup.initEnv()
-                    def id = ezUtils.getUniqueBuildIdentifier()
-                    if(env.BRANCH_NAME == 'main') {
+                    // Set the build ID
+                    def id = getUniqueBuildIdentifier()
+                    if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
-                        env.BUILD_ID = "0." + ezUtils.getUniqueBuildIdentifier("issueNumber") + "." + id
+                        def issueNumber = "issueNumber"  // Replace with actual issue number logic if available
+                        env.BUILD_ID = "0." + getUniqueBuildIdentifier(issueNumber) + "." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
@@ -60,14 +60,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
+                    dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", "./app")
                 }
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                sh 'pytest app'
+                sh 'pytest ./app'
             }
         }
 
