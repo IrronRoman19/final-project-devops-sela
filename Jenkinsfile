@@ -1,3 +1,4 @@
+def dockerImage
 pipeline {
     agent {
         kubernetes {
@@ -16,10 +17,6 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
-        MONGO_DB_PORT = '27017'
-        MONGO_DB_USER = 'mongoadmin'
-        MONGO_DB_PASS = 'secret'
     }
 
     stages {
@@ -68,25 +65,12 @@ pipeline {
             }
         }
 
-        stage('Test MongoDB Connection') {
-            steps {
-                script {
-                    dockerImage.inside {
-                        withEnv(["MONGO_DB_HOST=${env.MONGO_DB_HOST}", "MONGO_DB_PORT=${env.MONGO_DB_PORT}", "MONGO_DB_USER=${env.MONGO_DB_USER}", "MONGO_DB_PASS=${env.MONGO_DB_PASS}"]) {
-                            sh 'echo "db.runCommand({ connectionStatus: 1 })" | mongo ${MONGO_DB_HOST}:${MONGO_DB_PORT} -u ${MONGO_DB_USER} -p ${MONGO_DB_PASS}'
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
                     dockerImage.inside {
-                        withEnv(["MONGO_DB_HOST=${env.MONGO_DB_HOST}", "MONGO_DB_PORT=${env.MONGO_DB_PORT}", "MONGO_DB_USER=${env.MONGO_DB_USER}", "MONGO_DB_PASS=${env.MONGO_DB_PASS}"]) {
-                            sh 'pytest ./app'
-                        }
+                        sh 'pwd'
+                        sh 'pytest ./app'
                     }
                 }
             }
