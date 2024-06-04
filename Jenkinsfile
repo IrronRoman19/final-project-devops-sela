@@ -65,29 +65,6 @@ pipeline {
             }
         }
 
-        stage('Deploy Application') {
-            steps {
-                script {
-                    sh 'helm upgrade --install task-app ./helm/task-app --wait'
-                }
-            }
-        }
-
-        stage('Wait for MongoDB') {
-            steps {
-                script {
-                    sh '''
-                        echo "Waiting for MongoDB to be ready..."
-                        until nc -z task-db 27017; do
-                            echo "Waiting for MongoDB..."
-                            sleep 3
-                        done
-                        echo "MongoDB is ready"
-                    '''
-                }
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
