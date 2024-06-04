@@ -58,10 +58,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
-                        sh 'cd ./app'
-                        sh 'docker-compose -f docker-compose.test.yaml up -d'
                         sh 'pytest ./app'
-                        sh 'docker-compose -f docker-compose.test.yaml down'
                     }
                 }
             }
