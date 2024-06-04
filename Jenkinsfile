@@ -16,7 +16,7 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'localhost'
+        MONGO_DB_HOST = 'mongodb' // Use the service name instead of localhost
         MONGO_DB_PORT = '27017'
     }
 
@@ -51,6 +51,15 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}", "./app")
+                }
+            }
+        }
+
+        stage('Debug Network') {
+            steps {
+                script {
+                    sh 'nslookup mongodb-service'
+                    sh 'ping -c 4 mongodb-service'
                 }
             }
         }
