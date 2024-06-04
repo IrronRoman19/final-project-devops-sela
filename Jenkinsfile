@@ -55,15 +55,6 @@ pipeline {
             }
         }
 
-        // stage('Debug Network') {
-        //     steps {
-        //         script {
-        //             sh 'nslookup mongodb-service'
-        //             sh 'ping -c 4 mongodb-service'
-        //         }
-        //     }
-        // }
-
         stage('Run Unit Tests') {
             steps {
                 script {
