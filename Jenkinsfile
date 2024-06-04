@@ -24,16 +24,10 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    def initEnv = {
-                        echo 'Environment setup initialized'
-                    }
-
-                    def getUniqueBuildIdentifier = { suffix = '' ->
-                        return System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '')
-                    }
-
+                    // Initialize environment
+                    def initEnv = { echo 'Environment setup initialized' }
+                    def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
-
                     def id = getUniqueBuildIdentifier()
                     if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
@@ -60,20 +54,11 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kind') {
-            steps {
-                script {
-                    sh 'kind create cluster --name jenkins-cluster || echo "Cluster already exists"'
-                    sh 'helm install task-app ./helm/task-app --wait'
-                }
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
                     dockerImage.inside {
-                        sh 'pytest ./app/test'
+                        sh 'pytest ./app'
                     }
                 }
             }
@@ -106,15 +91,6 @@ pipeline {
             steps {
                 script {
                     sh "helm push ./helm/task-app"
-                }
-            }
-        }
-
-        stage('Cleanup') {
-            steps {
-                script {
-                    sh 'helm uninstall task-app'
-                    sh 'kind delete cluster --name jenkins-cluster'
                 }
             }
         }
