@@ -66,9 +66,10 @@ pipeline {
         }
 
         stage('Run Unit Tests') {
-            steps {
-                sh 'pip install pytest'
-                sh 'pytest app'
+            script {
+                dockerImage.inside {
+                    sh 'pytest app'
+                }
             }
         }
 
