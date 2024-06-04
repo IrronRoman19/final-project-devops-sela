@@ -24,3 +24,17 @@ spec:
   volumes:
     - name: mongo-data
       emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: jenkins
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongodb
