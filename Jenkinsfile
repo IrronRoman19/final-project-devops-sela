@@ -1,3 +1,4 @@
+def dockerImage
 pipeline {
     agent {
         kubernetes {
@@ -23,26 +24,21 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Define inline environment setup and utility functions
                     def initEnv = {
-                        // Placeholder for environment setup logic
                         echo 'Environment setup initialized'
                     }
 
                     def getUniqueBuildIdentifier = { suffix = '' ->
-                        // Generate a unique identifier, e.g., timestamp
                         return System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '')
                     }
 
-                    // Initialize environment
                     initEnv()
 
-                    // Set the build ID
                     def id = getUniqueBuildIdentifier()
                     if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
-                        def issueNumber = "issueNumber"  // Replace with actual issue number logic if available
+                        def issueNumber = "issueNumber"
                         env.BUILD_ID = "0." + getUniqueBuildIdentifier(issueNumber) + "." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
@@ -64,10 +60,11 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to Kind') {
             steps {
                 script {
-                    sh 'helm install task-app ./helm/task-app --namespace default'
+                    sh 'kind create cluster --name jenkins-cluster || echo "Cluster already exists"'
+                    sh 'helm install task-app ./helm/task-app --wait'
                 }
             }
         }
@@ -75,7 +72,9 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    sh 'kubectl run test-runner --rm -i --tty --image=irronroman19/task-app:latest -- /bin/sh -c "pytest ./app/test"'
+                    dockerImage.inside {
+                        sh 'pytest ./app/test'
+                    }
                 }
             }
         }
@@ -107,6 +106,15 @@ pipeline {
             steps {
                 script {
                     sh "helm push ./helm/task-app"
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh 'helm uninstall task-app'
+                    sh 'kind delete cluster --name jenkins-cluster'
                 }
             }
         }
