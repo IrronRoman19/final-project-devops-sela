@@ -1,8 +1,8 @@
 #!/bin/bash
 
-until python -c "import sys; from pymongo import MongoClient; client = MongoClient('$MONGO_DB_HOST', $MONGO_DB_PORT); sys.exit(0 if client.admin.command('ping')['ok'] == 1 else 1)"
+until python -c "import sys; from pymongo import MongoClient; client = MongoClient('mongodb.jenkins.svc.cluster.local', 27017); sys.exit(0 if client.admin.command('ping')['ok'] == 1 else 1)"
 do
-  echo "Waiting for MongoDB connection at $MONGO_DB_HOST:$MONGO_DB_PORT..."
+  echo "Waiting for MongoDB connection at mongodb.jenkins.svc.cluster.local:27017..."
   sleep 5
 done
-echo "MongoDB is up and running at $MONGO_DB_HOST:$MONGO_DB_PORT"
+echo "MongoDB is up and running at mongodb.jenkins.svc.cluster.local:27017"
