@@ -1,4 +1,3 @@
-def dockerImage
 pipeline {
     agent {
         kubernetes {
@@ -65,25 +64,10 @@ pipeline {
             }
         }
 
-        stage('Deploy Application') {
+        stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    sh 'helm upgrade --install task-app ./helm/task-app --wait'
-                }
-            }
-        }
-
-        stage('Wait for MongoDB') {
-            steps {
-                script {
-                    sh '''
-                        echo "Waiting for MongoDB to be ready..."
-                        until nc -z task-db 27017; do
-                            echo "Waiting for MongoDB..."
-                            sleep 3
-                        done
-                        echo "MongoDB is ready"
-                    '''
+                    sh 'helm install task-app ./helm/task-app --namespace default'
                 }
             }
         }
@@ -91,10 +75,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'pwd'
-                        sh 'pytest ./app'
-                    }
+                    sh 'kubectl run test-runner --rm -i --tty --image=irronroman19/task-app:latest -- /bin/sh -c "pytest ./app/test"'
                 }
             }
         }
