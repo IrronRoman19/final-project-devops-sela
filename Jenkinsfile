@@ -59,6 +59,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
+                        sh 'chmod +x ./wait_for_mongo.sh'
                         sh './wait_for_mongo.sh'
                         sh 'pytest ./app'
                     }
