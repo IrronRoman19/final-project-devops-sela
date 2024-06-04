@@ -66,9 +66,11 @@ pipeline {
         }
 
         stage('Run Unit Tests') {
-            script {
-                dockerImage.inside {
-                    sh 'pytest app'
+            steps {
+                script {
+                    dockerImage.inside {
+                        sh 'pytest ./app/tests'
+                    }
                 }
             }
         }
