@@ -1,4 +1,3 @@
-def dockerImage
 pipeline {
     agent {
         kubernetes {
@@ -65,13 +64,18 @@ pipeline {
             }
         }
 
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh 'helm install task-app ./helm/task-app --namespace default'
+                }
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'pwd'
-                        sh 'pytest ./app'
-                    }
+                    sh 'kubectl run test-runner --rm -i --tty --image=irronroman19/task-app:latest -- /bin/sh -c "pytest ./app/test"'
                 }
             }
         }
