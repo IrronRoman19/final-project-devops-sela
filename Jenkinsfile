@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
-                        sh 'pytest ./app/tests'
+                        sh 'pytest app'
                     }
                 }
             }
