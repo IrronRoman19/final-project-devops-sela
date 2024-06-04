@@ -57,11 +57,11 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    sh 'docker-compose -f docker-compose.test.yaml up -d'
+                    sh 'docker-compose -f docker-compose.test.yaml up -d ./app'
                     dockerImage.inside {
                         sh 'pytest ./app'
                     }
-                    sh 'docker-compose -f docker-compose.test.yaml down'
+                    sh 'docker-compose -f docker-compose.test.yaml down ./app'
                 }
             }
         }
