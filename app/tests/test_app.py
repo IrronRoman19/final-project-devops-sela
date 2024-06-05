@@ -12,13 +12,11 @@ from main import app, get_db
 @pytest.fixture(scope='module')
 def client():
     app.config['TESTING'] = True
-    os.environ['MONGO_DB_NAME'] = os.getenv('TEST_MONGO_DB_NAME', 'task_db_test')
-    os.environ['MONGO_DB_HOST'] = os.getenv('TEST_MONGO_DB_HOST', 'localhost')
-    os.environ['MONGO_DB_PORT'] = os.getenv('TEST_MONGO_DB_PORT', '27018')
+    os.environ['MONGO_DB_NAME'] = 'task_db_test'
+    os.environ['MONGO_DB_PORT'] = '27018'  # New port for testing
     with app.test_client() as client:
         yield client
     os.environ.pop('MONGO_DB_NAME')
-    os.environ.pop('MONGO_DB_HOST')
     os.environ.pop('MONGO_DB_PORT')
 
 @pytest.fixture(scope='module')
@@ -27,7 +25,7 @@ def db():
         db = get_db()
         yield db
         client = db.client
-        client.drop_database(os.getenv('TEST_MONGO_DB_NAME', 'task_db_test'))
+        client.drop_database('task_db_test')
 
 @pytest.fixture(autouse=True)
 def setup_database(db):
@@ -38,7 +36,6 @@ def setup_database(db):
     ])
     yield
     tasks_collection.delete_many({})
-
 
 def test_home_page(client):
     response = client.get('/')

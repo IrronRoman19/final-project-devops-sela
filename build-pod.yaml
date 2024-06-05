@@ -24,7 +24,7 @@ spec:
   - name: mongodb-test
     image: mongo:4.4
     ports:
-      - containerPort: 27018  # Different port for testing
+      - containerPort: 27018
     env:
       - name: MONGO_INITDB_ROOT_USERNAME
         value: mongoadmin
@@ -50,19 +50,7 @@ spec:
   ports:
   - port: 27017
     targetPort: 27017
+  - port: 27018
+    targetPort: 27018  # New port for testing
   selector:
     app: mongodb
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb-test
-  namespace: jenkins
-spec:
-  ports:
-  - port: 27018  # Different port for testing
-    targetPort: 27018
-  selector:
-    app: mongodb-test
