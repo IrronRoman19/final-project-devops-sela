@@ -55,14 +55,10 @@ pipeline {
             }
         }
 
+        // Uncomment the following stage to run unit tests
         // stage('Run Unit Tests') {
         //     steps {
         //         script {
-        //             // dockerImage.inside {
-        //             //     // sh 'chmod +x ./wait_for_mongo.sh'
-        //             //     // sh './wait_for_mongo.sh'
-        //             //     sh 'pytest ./app'
-        //             // }
         //             sh 'pytest ./app'
         //         }
         //     }
@@ -95,6 +91,19 @@ pipeline {
             steps {
                 script {
                     sh "helm push ./helm/task-app"
+                }
+            }
+        }
+
+        stage('Trigger Main Branch Build') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+                    build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
                 }
             }
         }
