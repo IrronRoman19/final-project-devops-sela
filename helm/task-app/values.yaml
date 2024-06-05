@@ -8,7 +8,6 @@ image:
 service:
   type: NodePort
   port: 5000
-  nodePort: 30000
 
 mongo:
   image:
@@ -18,7 +17,6 @@ mongo:
   service:
     type: NodePort
     port: 27017
-    nodePort: 30001
   auth:
     rootUsername: mongoadmin
     rootPassword: secret
