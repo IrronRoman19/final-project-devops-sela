@@ -4,23 +4,30 @@ metadata:
   name: docker-image-build
 spec:
   containers:
-  - name: ez-docker-helm-build
-    image: ezezeasy/ez-docker-helm-build:1.41
-    imagePullPolicy: Always
-    securityContext:
-      privileged: true
-  - name: mongodb
-    image: mongo:4.4
-    ports:
-      - containerPort: 27017
-    env:
-      - name: MONGO_INITDB_ROOT_USERNAME
-        value: mongoadmin
-      - name: MONGO_INITDB_ROOT_PASSWORD
-        value: secret
-    volumeMounts:
-      - name: mongo-data
-        mountPath: /data/db
+    - name: ez-docker-helm-build
+      image: ezezeasy/ez-docker-helm-build:1.41
+      imagePullPolicy: Always
+      securityContext:
+        privileged: true
+    - name: mongodb
+      image: mongo:4.4
+      ports:
+        - containerPort: 27017
+      env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: mongoadmin
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: secret
+      volumeMounts:
+        - name: mongo-data
+          mountPath: /data/db
+    - name: docker
+      image: docker:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
   volumes:
     - name: mongo-data
       emptyDir: {}
