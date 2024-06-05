@@ -18,6 +18,9 @@ pipeline {
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         MONGO_DB_HOST = 'mongodb.jenkins.svc.cluster.local'
         MONGO_DB_PORT = '27017'
+        MONGO_DB_NAME = 'task_db_test'
+        MONGO_DB_USER = 'mongoadmin'
+        MONGO_DB_PASS = 'secret'
     }
 
     stages {
@@ -55,12 +58,24 @@ pipeline {
             }
         }
 
+        stage('Wait for MongoDB') {
+            steps {
+                script {
+                    sh './wait_for_mongo.sh'
+                }
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 script {
-                    // Set environment variables for the test
-                    withEnv(["MONGO_DB_HOST=mongodb.jenkins.svc.cluster.local", "MONGO_DB_PORT=27017", "MONGO_DB_NAME=task_db_test"]) {
-                        // Run the tests
+                    withEnv([
+                        "MONGO_DB_HOST=${env.MONGO_DB_HOST}",
+                        "MONGO_DB_PORT=${env.MONGO_DB_PORT}",
+                        "MONGO_DB_NAME=${env.MONGO_DB_NAME}",
+                        "MONGO_DB_USER=${env.MONGO_DB_USER}",
+                        "MONGO_DB_PASS=${env.MONGO_DB_PASS}"
+                    ]) {
                         sh 'pytest ./app'
                     }
                 }
