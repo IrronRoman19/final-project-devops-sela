@@ -75,7 +75,10 @@ pipeline {
                         "MONGO_DB_PORT=${env.MONGO_DB_PORT}",
                         "MONGO_DB_NAME=${env.MONGO_DB_NAME}",
                         "MONGO_DB_USER=${env.MONGO_DB_USER}",
-                        "MONGO_DB_PASS=${env.MONGO_DB_PASS}"
+                        "MONGO_DB_PASS=${env.MONGO_DB_PASS}",
+                        "TEST_MONGO_DB_HOST=mongodb-test.jenkins.svc.cluster.local",
+                        "TEST_MONGO_DB_PORT=27018",
+                        "TEST_MONGO_DB_NAME=${env.MONGO_DB_NAME}_test"
                     ]) {
                         sh 'pytest ./app'
                     }
