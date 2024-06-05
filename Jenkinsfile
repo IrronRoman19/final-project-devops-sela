@@ -8,14 +8,16 @@ pipeline {
         }
     }
 
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '1'))
+    }
+
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         MONGO_DB_HOST = 'localhost'
         MONGO_DB_PORT = '27017'
-        MONGO_DB_USER = 'mongoadmin'
-        MONGO_DB_PASS = 'secret'
     }
 
     stages {
@@ -23,6 +25,7 @@ pipeline {
             steps {
                 checkout scm
                 script {
+                    // Initialize environment
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
@@ -52,12 +55,11 @@ pipeline {
             }
         }
 
+        // Uncomment the following stage to run unit tests
         stage('Run Unit Tests') {
             steps {
                 script {
-                    dockerImage.inside {
-                        sh 'pytest ./app'
-                    }
+                    sh 'pytest ./app'
                 }
             }
         }
