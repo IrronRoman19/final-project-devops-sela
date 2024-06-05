@@ -56,8 +56,7 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
-                        sh 'docker-compose up -d'
-                        sh 'pytest ./app/tests'
+                        sh 'pytest ./app'
                     }
                 }
             }
