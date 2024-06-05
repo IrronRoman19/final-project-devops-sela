@@ -55,14 +55,14 @@ pipeline {
             }
         }
 
-        // Uncomment the following stage to run unit tests
-        // stage('Run Unit Tests') {
-        //     steps {
-        //         script {
-        //             sh 'pytest ./app'
-        //         }
-        //     }
-        // }
+        Uncomment the following stage to run unit tests
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    sh 'pytest ./app'
+                }
+            }
+        }
 
         stage('Build Helm Package') {
             steps {
