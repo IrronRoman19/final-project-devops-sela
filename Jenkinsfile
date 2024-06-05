@@ -16,7 +16,7 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'mongodb'
+        MONGO_DB_HOST = 'mongodb.jenkins.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
 
@@ -59,9 +59,11 @@ pipeline {
             steps {
                 script {
                     dockerImage.inside {
+                        // Wait for MongoDB to be ready
                         sh 'chmod +x ./wait_for_mongo.sh'
                         sh './wait_for_mongo.sh'
-                        sh 'pytest ./app'
+                        // Run tests
+                        sh 'pytest ./app/tests/test_app.py'
                     }
                 }
             }
