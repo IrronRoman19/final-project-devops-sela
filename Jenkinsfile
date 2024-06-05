@@ -55,25 +55,25 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    dockerImage.inside("--network=host") {
-                        sh 'docker run -d --name mongo_test -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret -p 27018:27017 mongo:4.4'
+    stage('Run Unit Tests') {
+        steps {
+            script {
+                dockerImage.inside("--network=host") {
+                    sh 'docker run -d --name mongo_test -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret -p 27018:27017 mongo:4.4'
 
-                        sh 'chmod +x ./wait_for_mongo.sh'
-                        sh './wait_for_mongo.sh'
+                    sh 'chmod +x ./wait_for_mongo.sh'
+                    sh './wait_for_mongo.sh'
 
-                        withEnv(["MONGO_DB_HOST=localhost", "MONGO_DB_PORT=27018", "MONGO_DB_NAME=task_db_test"]) {
-                            sh 'pytest ./app'
-                        }
-
-                        sh 'docker stop mongo_test'
-                        sh 'docker rm mongo_test'
+                    withEnv(["MONGO_DB_HOST=localhost", "MONGO_DB_PORT=27018", "MONGO_DB_NAME=task_db_test"]) {
+                        sh 'pytest ./app'
                     }
+
+                    sh 'docker stop mongo_test'
+                    sh 'docker rm mongo_test'
                 }
             }
         }
+    }
 
 
         stage('Build Helm Package') {
