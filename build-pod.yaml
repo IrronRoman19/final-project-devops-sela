@@ -6,7 +6,6 @@ spec:
   containers:
   - name: ez-docker-helm-build
     image: ezezeasy/ez-docker-helm-build:1.41
-    imagePullPolicy: Always
     securityContext:
       privileged: true
   - name: mongodb
@@ -38,19 +37,3 @@ spec:
       emptyDir: {}
     - name: mongo-data-test
       emptyDir: {}
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongodb
-  namespace: jenkins
-spec:
-  ports:
-  - port: 27017
-    targetPort: 27017
-  - port: 27018
-    targetPort: 27018  # New port for testing
-  selector:
-    app: mongodb
