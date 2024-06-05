@@ -55,17 +55,18 @@ pipeline {
             }
         }
 
-        // stage('Run Unit Tests') {
-        //     steps {
-        //         script {
-        //             dockerImage.inside {
-        //                 // sh 'chmod +x ./wait_for_mongo.sh'
-        //                 // sh './wait_for_mongo.sh'
-        //                 sh 'pytest ./app'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    // dockerImage.inside {
+                    //     // sh 'chmod +x ./wait_for_mongo.sh'
+                    //     // sh './wait_for_mongo.sh'
+                    //     sh 'pytest ./app'
+                    // }
+                    sh 'pytest ./app'
+                }
+            }
+        }
 
         stage('Build Helm Package') {
             steps {
