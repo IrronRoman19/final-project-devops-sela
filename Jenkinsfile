@@ -44,7 +44,6 @@ pipeline {
             }
         }
 
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -56,8 +55,9 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    sh 'docker-compose up -d'
-                    sh 'pytest ./app/tests'
+                    dockerImage.inside {
+                        sh 'pytest ./app'
+                    }
                 }
             }
         }
