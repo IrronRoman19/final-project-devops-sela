@@ -2,14 +2,9 @@ pipeline {
     agent {
         kubernetes {
             label 'jenkins-agent-pod'
-            idleMinutes 1
             yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
-    }
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '1'))
     }
 
     environment {
@@ -28,17 +23,9 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Initialize environment
-                    def initEnv = { echo 'Environment setup initialized' }
-                    def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
-                    initEnv()
-                    def id = getUniqueBuildIdentifier()
-                    if (env.BRANCH_NAME == 'main') {
-                        env.BUILD_ID = "1." + id
-                    } else {
-                        def issueNumber = "issueNumber"
-                        env.BUILD_ID = "0." + getUniqueBuildIdentifier(issueNumber) + "." + id
-                    }
+                    echo 'Environment setup initialized'
+                    def id = System.currentTimeMillis().toString()
+                    env.BUILD_ID = "${env.BRANCH_NAME == 'main' ? '1' : '0'}.$id"
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
             }
@@ -108,9 +95,7 @@ pipeline {
                 branch 'main'
             }
             steps {
-                script {
-                    sh "helm push ./helm/task-app"
-                }
+                sh "helm push ./helm/task-app"
             }
         }
     }
