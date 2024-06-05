@@ -1,7 +1,7 @@
 #!/bin/bash
 
-MAX_RETRIES=30
-RETRY_INTERVAL=5
+MAX_RETRIES=60
+RETRY_INTERVAL=10
 
 until python -c "import sys; from pymongo import MongoClient; client = MongoClient('mongodb.jenkins.svc.cluster.local', 27017); sys.exit(0 if client.admin.command('ping')['ok'] == 1 else 1)"
 do
