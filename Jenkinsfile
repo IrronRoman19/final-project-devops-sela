@@ -59,7 +59,9 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    sh 'pytest ./app'
+                    dockerImage.inside {
+                        sh 'pytest ./app'
+                    }
                 }
             }
         }
