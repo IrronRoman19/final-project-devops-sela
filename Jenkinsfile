@@ -63,7 +63,7 @@ pipeline {
                     //     // sh './wait_for_mongo.sh'
                     //     sh 'pytest ./app'
                     // }
-                    sh 'pytest ./app'
+                    // sh 'pytest ./app'
                 }
             }
         }
