@@ -9,13 +9,6 @@ spec:
     imagePullPolicy: Always
     securityContext:
       privileged: true
-    resources:
-      requests:
-        memory: "1Gi"
-        cpu: "500m"
-      limits:
-        memory: "2Gi"
-        cpu: "1"
   - name: mongodb
     image: mongo:4.4
     ports:
@@ -28,34 +21,48 @@ spec:
     volumeMounts:
       - name: mongo-data
         mountPath: /data/db
+  - name: mongodb-test
+    image: mongo:4.4
+    ports:
+      - containerPort: 27018  # Different port for testing
+    env:
+      - name: MONGO_INITDB_ROOT_USERNAME
+        value: mongoadmin
+      - name: MONGO_INITDB_ROOT_PASSWORD
+        value: secret
+    volumeMounts:
+      - name: mongo-data-test
+        mountPath: /data/db
   volumes:
     - name: mongo-data
+      emptyDir: {}
+    - name: mongo-data-test
       emptyDir: {}
 
 ---
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
   name: mongodb
   namespace: jenkins
 spec:
-  replicas: 1
+  ports:
+  - port: 27017
+    targetPort: 27017
   selector:
-    matchLabels:
-      app: mongodb
-  template:
-    metadata:
-      labels:
-        app: mongodb
-    spec:
-      containers:
-      - name: mongo
-        image: mongo:4.4
-        ports:
-        - containerPort: 27017
-        env:
-        - name: MONGO_INITDB_ROOT_USERNAME
-          value: mongoadmin
-        - name: MONGO_INITDB_ROOT_PASSWORD
-          value: secret
+    app: mongodb
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-test
+  namespace: jenkins
+spec:
+  ports:
+  - port: 27018  # Different port for testing
+    targetPort: 27018
+  selector:
+    app: mongodb-test
