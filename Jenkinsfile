@@ -61,6 +61,7 @@ pipeline {
         stage('Wait for MongoDB') {
             steps {
                 script {
+                    sh 'chmod +x ./wait_for_mongo.sh'
                     sh './wait_for_mongo.sh'
                 }
             }
