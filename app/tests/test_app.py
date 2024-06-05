@@ -12,9 +12,10 @@ from main import app, get_db
 @pytest.fixture(scope='module')
 def client():
     app.config['TESTING'] = True
-    app.config['MONGO_DB_NAME'] = 'task_db_test'
+    os.environ['MONGO_DB_NAME'] = 'task_db_test'
     with app.test_client() as client:
         yield client
+    os.environ.pop('MONGO_DB_NAME')
 
 @pytest.fixture(scope='module')
 def db():
