@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 def get_db():
     if 'db' not in g:
-        mongo_db_name = os.getenv('MONGO_DB_NAME', 'task_db')
+        mongo_db_name = 'task_db_test' if app.config['TESTING'] else 'task_db'
         mongo_db_user = os.getenv('MONGO_DB_USER', 'mongoadmin')
         mongo_db_pass = os.getenv('MONGO_DB_PASS', 'secret')
         mongo_db_host = os.getenv('MONGO_DB_HOST', 'localhost')

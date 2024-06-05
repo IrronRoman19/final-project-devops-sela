@@ -21,22 +21,8 @@ spec:
     volumeMounts:
       - name: mongo-data
         mountPath: /data/db
-  - name: mongodb-test
-    image: mongo:4.4
-    ports:
-      - containerPort: 27018
-    env:
-      - name: MONGO_INITDB_ROOT_USERNAME
-        value: mongoadmin
-      - name: MONGO_INITDB_ROOT_PASSWORD
-        value: secret
-    volumeMounts:
-      - name: mongo-data-test
-        mountPath: /data/db
   volumes:
     - name: mongo-data
-      emptyDir: {}
-    - name: mongo-data-test
       emptyDir: {}
 
 ---
@@ -50,7 +36,5 @@ spec:
   ports:
   - port: 27017
     targetPort: 27017
-  - port: 27018
-    targetPort: 27018  # New port for testing
   selector:
     app: mongodb
