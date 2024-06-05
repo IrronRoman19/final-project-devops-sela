@@ -2,20 +2,22 @@ pipeline {
     agent {
         kubernetes {
             label 'jenkins-agent-pod'
+            idleMinutes 1
             yamlFile 'build-pod.yaml'
             defaultContainer 'ez-docker-helm-build'
         }
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '1'))
     }
 
     environment {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'mongodb.jenkins.svc.cluster.local'
+        MONGO_DB_HOST = 'mongodb'
         MONGO_DB_PORT = '27017'
-        MONGO_DB_NAME = 'task_db_test'
-        MONGO_DB_USER = 'mongoadmin'
-        MONGO_DB_PASS = 'secret'
     }
 
     stages {
@@ -23,9 +25,17 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    echo 'Environment setup initialized'
-                    def id = System.currentTimeMillis().toString()
-                    env.BUILD_ID = "${env.BRANCH_NAME == 'main' ? '1' : '0'}.$id"
+                    // Initialize environment
+                    def initEnv = { echo 'Environment setup initialized' }
+                    def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
+                    initEnv()
+                    def id = getUniqueBuildIdentifier()
+                    if (env.BRANCH_NAME == 'main') {
+                        env.BUILD_ID = "1." + id
+                    } else {
+                        def issueNumber = "issueNumber"
+                        env.BUILD_ID = "0." + getUniqueBuildIdentifier(issueNumber) + "." + id
+                    }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
             }
@@ -45,25 +55,12 @@ pipeline {
             }
         }
 
-        stage('Wait for MongoDB') {
-            steps {
-                script {
-                    sh 'chmod +x ./wait_for_mongo.sh'
-                    sh './wait_for_mongo.sh'
-                }
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 script {
-                    withEnv([
-                        "MONGO_DB_HOST=${env.MONGO_DB_HOST}",
-                        "MONGO_DB_PORT=27018",
-                        "MONGO_DB_NAME=${env.MONGO_DB_NAME}",
-                        "MONGO_DB_USER=${env.MONGO_DB_USER}",
-                        "MONGO_DB_PASS=${env.MONGO_DB_PASS}"
-                    ]) {
+                    dockerImage.inside {
+                        // sh 'chmod +x ./wait_for_mongo.sh'
+                        // sh './wait_for_mongo.sh'
                         sh 'pytest ./app'
                     }
                 }
@@ -95,7 +92,9 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh "helm push ./helm/task-app"
+                script {
+                    sh "helm push ./helm/task-app"
+                }
             }
         }
     }
