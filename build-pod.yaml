@@ -9,6 +9,8 @@ spec:
     imagePullPolicy: Always
     securityContext:
       privileged: true
+    command: ["/bin/sh"]
+    args: ["-c", "apk add --no-cache docker-compose"]
   - name: mongodb
     image: mongo:4.4
     ports:
