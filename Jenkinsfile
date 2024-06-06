@@ -25,7 +25,6 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Initialize environment
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
@@ -85,65 +84,65 @@ pipeline {
             }
         }
 
-    //     stage('Request Merge to Main') {
-    //         when {
-    //             not {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             script {
-    //                 def pr = pullRequest.create(
-    //                     owner: 'IrronRoman19',
-    //                     repo: 'final-project-devops-sela',
-    //                     title: "Merge ${env.BRANCH_NAME} into main",
-    //                     head: env.BRANCH_NAME,
-    //                     base: 'main'
-    //                 )
-    //                 echo "Created Pull Request #${pr.number}"
-    //             }
-    //         }
-    //     }
+        stage('Request Merge to Main') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+                    def pr = pullRequest.create(
+                        owner: 'IrronRoman19',
+                        repo: 'final-project-devops-sela',
+                        title: "Merge ${env.BRANCH_NAME} into main",
+                        head: env.BRANCH_NAME,
+                        base: 'main'
+                    )
+                    echo "Created Pull Request #${pr.number}"
+                }
+            }
+        }
 
-    //     stage('Manual Approval') {
-    //         when {
-    //             not {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             input message: 'Approve Merge to Main?', ok: 'Merge'
-    //         }
-    //     }
+        stage('Manual Approval') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            steps {
+                input message: 'Approve Merge to Main?', ok: 'Merge'
+            }
+        }
 
-    //     stage('Merge to Main') {
-    //         when {
-    //             not {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             script {
-    //                 withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-    //                     sh """
-    //                         curl -X PUT -H "Authorization: token ${GITHUB_TOKEN}" \
-    //                         -H "Accept: application/vnd.github.v3+json" \
-    //                         https://api.github.com/repos/IrronRoman19/final-project-devops-sela/pulls/${pr.number}/merge
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('Merge to Main') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        sh """
+                            curl -X PUT -H "Authorization: token ${GITHUB_TOKEN}" \
+                            -H "Accept: application/vnd.github.v3+json" \
+                            https://api.github.com/repos/IrronRoman19/final-project-devops-sela/pulls/${pr.number}/merge
+                        """
+                    }
+                }
+            }
+        }
 
-    //     stage('Trigger Main Branch Build') {
-    //         when {
-    //             not {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             build(job: env.JOB_NAME, parameters: [string(name: 'BRANCH_NAME', value: 'main')])
-    //         }
-    //     }
-    // }
+        stage('Trigger Main Branch Build') {
+            when {
+                not {
+                    branch 'main'
+                }
+            }
+            steps {
+                build(job: env.JOB_NAME, parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+            }
+        }
+    }
 }
