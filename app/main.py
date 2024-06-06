@@ -11,7 +11,7 @@ def get_db():
         mongo_db_name = 'task_db_test' if app.config['TESTING'] else 'task_db'
         mongo_db_user = os.getenv('MONGO_DB_USER', 'mongoadmin')
         mongo_db_pass = os.getenv('MONGO_DB_PASS', 'secret')
-        mongo_db_host = os.getenv('MONGO_DB_HOST', 'mongo.default.svc.cluster.local')
+        mongo_db_host = os.getenv('MONGO_DB_HOST', 'task-db.default.svc.cluster.local')
         mongo_db_port = int(os.getenv('MONGO_DB_PORT', 27017))
         mongo_db_address = f'mongodb://{mongo_db_user}:{mongo_db_pass}@{mongo_db_host}:{mongo_db_port}/'
         client = MongoClient(mongo_db_address)
