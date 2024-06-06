@@ -24,8 +24,8 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                checkout scm
                 script {
+                    checkout scm
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
@@ -43,7 +43,9 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git branch: env.BRANCH_NAME, url: "https://github.com/${env.GITHUB_REPO}.git"
+                script {
+                    git branch: env.BRANCH_NAME, url: "https://github.com/${env.GITHUB_REPO}.git"
+                }
             }
         }
 
