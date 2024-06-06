@@ -119,7 +119,7 @@ pipeline {
             }
             steps {
                 script {
-                    build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+                    build(job: 'ci-task-app', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
                 }
             }
         }
