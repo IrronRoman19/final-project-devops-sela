@@ -85,28 +85,28 @@ pipeline {
             }
         }
 
-        stage('Push Helm Package') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    sh "helm push ./helm/task-app"
-                }
-            }
-        }
+        // stage('Upgrade Helm Package') {
+        //     when {
+        //         branch 'main'
+        //     }
+        //     steps {
+        //         script {
+        //             sh "helm upgrade ./helm/task-app"
+        //         }
+        //     }
+        // }
 
-        stage('Trigger Main Branch Build') {
-            when {
-                not {
-                    branch 'main'
-                }
-            }
-            steps {
-                script {
-                    build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
-                }
-            }
-        }
+        // stage('Trigger Main Branch Build') {
+        //     when {
+        //         not {
+        //             branch 'main'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+        //         }
+        //     }
+        // }
     }
 }
