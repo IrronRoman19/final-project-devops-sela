@@ -22,6 +22,10 @@ pipeline {
         MONGO_DB_PORT = '27017'
     }
 
+    triggers {
+        pollSCM('H/1 * * * *') // Poll for changes every minute
+    }
+
     stages {
         stage('Setup') {
             steps {
@@ -103,13 +107,15 @@ pipeline {
                 }
             }
         }
-
-        stage('Manual Approval') {
+        
+        stage('Merge Approval') {
             when {
-                branch 'feature'
+                branch 'main'
             }
             steps {
-                input message: 'Approve the merge to main?', ok: 'Approve'
+                script {
+                    input message: 'Approve the merge to main?', ok: 'Approve'
+                }
             }
         }
 
