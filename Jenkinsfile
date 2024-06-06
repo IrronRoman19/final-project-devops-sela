@@ -109,7 +109,31 @@ pipeline {
                 branch 'feature'
             }
             steps {
-                input message: 'Approve the merge to main?', ok: 'Approve'
+                script {
+                    input message: 'Approve the merge to main?', ok: 'Approve'
+                }
+            }
+        }
+
+        stage('Update Pull Request Status') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    // Find the pull request number
+                    def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
+                    def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
+
+                    // Approve the pull request
+                    def approvePR = """
+                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
+                            "body": "Approved by Jenkins",
+                            "event": "APPROVE"
+                        }'
+                    """
+                    sh approvePR
+                }
             }
         }
 
