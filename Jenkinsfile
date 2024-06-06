@@ -16,7 +16,7 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'localhost'
+        MONGO_DB_HOST = 'mongodb.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
 
