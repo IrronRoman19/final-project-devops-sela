@@ -18,13 +18,14 @@ pipeline {
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
+        GITHUB_TOKEN = credentials('github-token')
     }
 
     stages {
         stage('Setup') {
             steps {
-                checkout scm
                 script {
+                    checkout scm
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
@@ -42,7 +43,9 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git branch: env.BRANCH_NAME, url: "https://github.com/${env.GITHUB_REPO}.git"
+                script {
+                    git branch: env.BRANCH_NAME, url: "https://github.com/${env.GITHUB_REPO}.git"
+                }
             }
         }
 
@@ -92,14 +95,9 @@ pipeline {
             }
             steps {
                 script {
-                    def pr = pullRequest.create(
-                        owner: 'IrronRoman19',
-                        repo: 'final-project-devops-sela',
-                        title: "Merge ${env.BRANCH_NAME} into main",
-                        head: env.BRANCH_NAME,
-                        base: 'main'
-                    )
+                    def pr = createPullRequest()
                     echo "Created Pull Request #${pr.number}"
+                    currentBuild.description = "PR #${pr.number}"
                 }
             }
         }
@@ -123,13 +121,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-                        sh """
-                            curl -X PUT -H "Authorization: token ${GITHUB_TOKEN}" \
-                            -H "Accept: application/vnd.github.v3+json" \
-                            https://api.github.com/repos/IrronRoman19/final-project-devops-sela/pulls/${pr.number}/merge
-                        """
-                    }
+                    mergePullRequest()
                 }
             }
         }
@@ -145,4 +137,41 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
+
+def createPullRequest() {
+    def response = httpRequest(
+        acceptType: 'APPLICATION_JSON',
+        contentType: 'APPLICATION_JSON',
+        httpMode: 'POST',
+        requestBody: """{
+            "title": "Merge ${env.BRANCH_NAME} into main",
+            "head": "${env.BRANCH_NAME}",
+            "base": "main"
+        }""",
+        url: "https://api.github.com/repos/${env.GITHUB_REPO}/pulls",
+        customHeaders: [
+            [name: 'Authorization', value: "token ${env.GITHUB_TOKEN}"]
+        ]
+    )
+    return new groovy.json.JsonSlurper().parseText(response.content)
+}
+
+def mergePullRequest() {
+    def prNumber = currentBuild.description.split('#')[1]
+    httpRequest(
+        acceptType: 'APPLICATION_JSON',
+        contentType: 'APPLICATION_JSON',
+        httpMode: 'PUT',
+        url: "https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/merge",
+        customHeaders: [
+            [name: 'Authorization', value: "token ${env.GITHUB_TOKEN}"]
+        ]
+    )
 }
