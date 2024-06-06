@@ -113,6 +113,25 @@ pipeline {
             }
         }
 
+        stage('Merge Pull Request') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    // Merge the pull request using GitHub API
+                    def mergePR = """
+                        PR_NUMBER=$(curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -s https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME} | jq -r '.[0].number')
+                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X PUT -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${PR_NUMBER}/merge -d '{
+                            "commit_title": "Merge pull request #${PR_NUMBER} from ${env.BRANCH_NAME} to main",
+                            "merge_method": "merge"
+                        }'
+                    """
+                    sh mergePR
+                }
+            }
+        }
+
         stage('Trigger Main Branch Build') {
             when {
                 branch 'feature'
