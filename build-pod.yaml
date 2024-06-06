@@ -9,4 +9,3 @@ spec:
     imagePullPolicy: Always
     securityContext:
       privileged: true
-
