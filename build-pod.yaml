@@ -9,19 +9,4 @@ spec:
     imagePullPolicy: Always
     securityContext:
       privileged: true
-  - name: mongodb
-    image: mongo:4.4
-    ports:
-      - containerPort: 27017
-    env:
-      - name: MONGO_INITDB_ROOT_USERNAME
-        value: mongoadmin
-      - name: MONGO_INITDB_ROOT_PASSWORD
-        value: secret
-    volumeMounts:
-      - name: mongo-data
-        mountPath: /data/db
-  volumes:
-    - name: mongo-data
-      emptyDir: {}
-  dnsPolicy: ClusterFirst
+
