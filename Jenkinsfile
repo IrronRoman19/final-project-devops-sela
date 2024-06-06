@@ -16,6 +16,8 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
+        GITHUB_USERNAME = 'irronroman19'
+        GITHUB_CREDENTIALS_ID = 'git-token'
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
@@ -25,7 +27,6 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Initialize environment
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
@@ -33,8 +34,7 @@ pipeline {
                     if (env.BRANCH_NAME == 'main') {
                         env.BUILD_ID = "1." + id
                     } else {
-                        def issueNumber = "issueNumber"
-                        env.BUILD_ID = "0." + getUniqueBuildIdentifier(issueNumber) + "." + id
+                        env.BUILD_ID = "0." + getUniqueBuildIdentifier('feature') + "." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
                 }
@@ -85,28 +85,43 @@ pipeline {
             }
         }
 
-        // stage('Upgrade Helm Package') {
-        //     when {
-        //         branch 'main'
-        //     }
-        //     steps {
-        //         script {
-        //             sh "helm upgrade ./helm/task-app"
-        //         }
-        //     }
-        // }
+        stage('Create Pull Request') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    // Create a pull request from the feature branch to the main branch using GitHub API
+                    def createPR = """
+                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
+                            "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
+                            "head": "${env.BRANCH_NAME}",
+                            "base": "main"
+                        }'
+                    """
+                    sh createPR
+                }
+            }
+        }
 
-        // stage('Trigger Main Branch Build') {
-        //     when {
-        //         not {
-        //             branch 'main'
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
-        //         }
-        //     }
-        // }
+        stage('Manual Approval') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                input message: 'Approve the merge to main?', ok: 'Approve'
+            }
+        }
+
+        stage('Trigger Main Branch Build') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+                }
+            }
+        }
     }
 }
