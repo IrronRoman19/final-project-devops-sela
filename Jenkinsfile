@@ -25,7 +25,6 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Initialize environment
                     def initEnv = { echo 'Environment setup initialized' }
                     def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
                     initEnv()
