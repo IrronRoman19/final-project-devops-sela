@@ -16,7 +16,7 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        MONGO_DB_HOST = 'localhost'
+        MONGO_DB_HOST = 'mongodb.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
 
@@ -85,28 +85,28 @@ pipeline {
             }
         }
 
-        stage('Push Helm Package') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    sh "helm push ./helm/task-app"
-                }
-            }
-        }
+        // stage('Upgrade Helm Package') {
+        //     when {
+        //         branch 'main'
+        //     }
+        //     steps {
+        //         script {
+        //             sh "helm upgrade ./helm/task-app"
+        //         }
+        //     }
+        // }
 
-        stage('Trigger Main Branch Build') {
-            when {
-                not {
-                    branch 'main'
-                }
-            }
-            steps {
-                script {
-                    build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
-                }
-            }
-        }
+        // stage('Trigger Main Branch Build') {
+        //     when {
+        //         not {
+        //             branch 'main'
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             build(job: 'Your_Main_Branch_Job', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+        //         }
+        //     }
+        // }
     }
 }
