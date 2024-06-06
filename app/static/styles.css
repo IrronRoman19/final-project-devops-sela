@@ -7,7 +7,7 @@ html {
     text-align: center;
     align-items: center;
     font-size: x-large;
-    background: linear-gradient(45deg, cyan, lightblue, white);
+    background: linear-gradient(45deg, green, lightblue, white);
     box-sizing: border-box;
 }
 
@@ -28,7 +28,7 @@ header {
 }
   
 nav {
-    background: linear-gradient(45deg, lime, lightyellow);
+    background: linear-gradient(45deg, yellow, lightyellow);
     grid-column: span 6;
 }
 
