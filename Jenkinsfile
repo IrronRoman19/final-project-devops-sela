@@ -135,7 +135,7 @@ pipeline {
             steps {
                 script {
                     def prList = sh(script: """
-                        curl -u ${env.GITHUB_CREDENTIALS} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
+                        curl -u irronroman19:${env.GIT_TOKEN} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
                     """, returnStdout: true).trim()
                     echo "PR List: ${prList}"
 
@@ -151,7 +151,7 @@ pipeline {
 
                     // Approve the pull request
                     def approvePR = """
-                        curl -u ${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
+                        curl -u irronroman19:${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
                             "body": "Approved by Jenkins",
                             "event": "APPROVE"
                         }'
