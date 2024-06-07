@@ -126,7 +126,11 @@ pipeline {
                     def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
                     echo "PR List: ${prList}"
 
-                    def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }?.number
+                    def jsonSlurper = new groovy.json.JsonSlurper()
+                    def prListParsed = jsonSlurper.parseText(prList)
+                    echo "Parsed PR List: ${prListParsed}"
+
+                    def prNumber = prListParsed.find { it.head.ref == "${env.BRANCH_NAME}" }?.number
 
                     if (prNumber == null) {
                         error "Failed to find PR number for branch: ${env.BRANCH_NAME}"
