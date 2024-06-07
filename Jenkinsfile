@@ -91,17 +91,40 @@ pipeline {
             }
             steps {
                 script {
+                    echo "Creating Pull Request from ${env.BRANCH_NAME} to main"
+                    
+                    def createPRPayload = """
+                    {
+                        "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
+                        "head": "${env.BRANCH_NAME}",
+                        "base": "main"
+                    }
+                    """
+                    echo "PR Payload: ${createPRPayload}"
+
                     def createPRResponse = sh(
                         script: """
-                            curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
-                                "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
-                                "head": "${env.BRANCH_NAME}",
-                                "base": "main"
-                            }'
+                            curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
                         """,
                         returnStdout: true
                     ).trim()
+
                     echo "Create PR Response: ${createPRResponse}"
+
+                    def jsonResponse = new groovy.json.JsonSlurper().parseText(createPRResponse)
+                    if (jsonResponse.message) {
+                        error "Failed to create PR: ${jsonResponse.message}"
+                    }
+                }
+            }
+        }
+
+        stage('Print Environment Variables') {
+            steps {
+                script {
+                    echo "GITHUB_REPO: ${env.GITHUB_REPO}"
+                    echo "GITHUB_USERNAME: ${env.GITHUB_USERNAME}"
+                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
                 }
             }
         }
@@ -123,8 +146,6 @@ pipeline {
             }
             steps {
                 script {
-                    sleep(10) // Sleep for 10 seconds to allow GitHub to index the PR
-
                     def prList = sh(script: """
                         curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
                     """, returnStdout: true).trim()
