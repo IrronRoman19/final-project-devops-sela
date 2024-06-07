@@ -91,15 +91,17 @@ pipeline {
             }
             steps {
                 script {
-                    // Create a pull request from the feature branch to the main branch using GitHub API
-                    def createPR = """
-                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
-                            "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
-                            "head": "${env.BRANCH_NAME}",
-                            "base": "main"
-                        }'
-                    """
-                    sh createPR
+                    def createPRResponse = sh(
+                        script: """
+                            curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
+                                "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
+                                "head": "${env.BRANCH_NAME}",
+                                "base": "main"
+                            }'
+                        """,
+                        returnStdout: true
+                    ).trim()
+                    echo "Create PR Response: ${createPRResponse}"
                 }
             }
         }
@@ -121,7 +123,6 @@ pipeline {
             }
             steps {
                 script {
-                    // Find the pull request number
                     def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
                     echo "PR List: ${prList}"
 
