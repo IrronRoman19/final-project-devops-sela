@@ -16,8 +16,7 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        GITHUB_CREDENTIALS_ID = 'git-token'
-        GITHUB_USERNAME = 'irronroman19'
+        // GITHUB_CREDENTIALS = 'irronroman19:{GIT_TOKEN}'
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
@@ -102,18 +101,20 @@ pipeline {
                     """
                     echo "PR Payload: ${createPRPayload}"
 
-                    def createPRResponse = sh(
-                        script: """
-                            curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
-                        """,
-                        returnStdout: true
-                    ).trim()
+                    withCredentials([string(credentialsId: '{GIT_TOKEN}', variable: 'GIT_TOKEN')]) {
+                        def createPRResponse = sh(
+                            script: """
+                                curl -u irronroman19:$GIT_TOKEN -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
+                            """,
+                            returnStdout: true
+                        ).trim()
 
-                    echo "Create PR Response: ${createPRResponse}"
+                        echo "Create PR Response: ${createPRResponse}"
 
-                    def jsonResponse = new groovy.json.JsonSlurper().parseText(createPRResponse)
-                    if (jsonResponse.message) {
-                        error "Failed to create PR: ${jsonResponse.message}"
+                        def jsonResponse = new groovy.json.JsonSlurper().parseText(createPRResponse)
+                        if (jsonResponse.message) {
+                            error "Failed to create PR: ${jsonResponse.message}"
+                        }
                     }
                 }
             }
@@ -147,7 +148,7 @@ pipeline {
             steps {
                 script {
                     def prList = sh(script: """
-                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
+                        curl -u ${env.GITHUB_CREDENTIALS} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
                     """, returnStdout: true).trim()
                     echo "PR List: ${prList}"
 
@@ -163,7 +164,7 @@ pipeline {
 
                     // Approve the pull request
                     def approvePR = """
-                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
+                        curl -u ${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
                             "body": "Approved by Jenkins",
                             "event": "APPROVE"
                         }'
