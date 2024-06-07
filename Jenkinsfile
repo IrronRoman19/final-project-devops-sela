@@ -100,12 +100,15 @@ pipeline {
                     """
                     echo "PR Payload: ${createPRPayload}"
 
-                    def createPRResponse = sh(
-                        script: """
-                            curl -u irronroman19:${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
-                        """,
-                        returnStdout: true
-                    ).trim()
+                    def createPRResponse = ""
+                    withCredentials([string(credentialsId: 'jenkins-connect', variable: 'GIT_TOKEN')]) {
+                        createPRResponse = sh(
+                            script: """
+                                curl -u irronroman19:${GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
+                            """,
+                            returnStdout: true
+                        ).trim()
+                    }
 
                     echo "Create PR Response: ${createPRResponse}"
 
