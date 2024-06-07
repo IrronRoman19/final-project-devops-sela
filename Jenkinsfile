@@ -17,7 +17,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         GITHUB_USERNAME = 'irronroman19'
-        GITHUB_TOKEN = credentials('git-token')
+        GITHUB_CREDENTIALS = credentials('git-token')
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     // Import GitHub token from Jenkins credentials
-                    withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GIT_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'git-token')]) {
                         def createPR = """
                             curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
                                 "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
