@@ -17,7 +17,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         GITHUB_USERNAME = 'irronroman19'
-        GITHUB_TOKEN = credentials('jenkins-connect')
+        GITHUB_TOKEN = credentials('GIT_TOKEN')
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
