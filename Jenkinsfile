@@ -91,7 +91,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo '${GITHUB_TOKEN}'
+                    echo '${env.GITHUB_TOKEN}'
 
                     // // Import GitHub token from Jenkins credentials
                     // withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'git-token')]) {
