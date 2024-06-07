@@ -91,63 +91,61 @@ pipeline {
             }
             steps {
                 script {
-                    echo "${env.GITHUB_CREDENTIALS}"
-
                     // // Import GitHub token from Jenkins credentials
-                    // withCredentials([string(credentialsId: 'GITHUB_CREDENTIALS', variable: 'git-token')]) {
-                    //     def createPR = """
-                    //         curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
-                    //             "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
-                    //             "head": "${env.BRANCH_NAME}",
-                    //             "base": "main"
-                    //         }'
-                    //     """
-                    //     sh createPR
-                    // }
+                    withCredentials([string(credentialsId: 'GITHUB_CREDENTIALS', variable: 'git-token')]) {
+                        def createPR = """
+                            curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
+                                "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
+                                "head": "${env.BRANCH_NAME}",
+                                "base": "main"
+                            }'
+                        """
+                        sh createPR
+                    }
                 }
             }
         }
 
-        // stage('Manual Approval') {
-        //     when {
-        //         branch 'feature'
-        //     }
-        //     steps {
-        //         script {
-        //             input message: 'Approve the merge to main?', ok: 'Approve'
-        //         }
-        //     }
-        // }
+        stage('Manual Approval') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    input message: 'Approve the merge to main?', ok: 'Approve'
+                }
+            }
+        }
 
-        // stage('Update Pull Request Status') {
-        //     when {
-        //         branch 'feature'
-        //     }
-        //     steps {
-        //         script {
-        //             def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
-        //             def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
+        stage('Update Pull Request Status') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
+                    def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
 
-        //             def approvePR = """
-        //                 curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
-        //                     "body": "Approved by Jenkins",
-        //                     "event": "APPROVE"
-        //                 }'
-        //             """
-        //             sh approvePR
-        //         }
-        //     }
-        // }
+                    def approvePR = """
+                        curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
+                            "body": "Approved by Jenkins",
+                            "event": "APPROVE"
+                        }'
+                    """
+                    sh approvePR
+                }
+            }
+        }
 
-        // stage('Trigger Main Branch Build') {
-        //     when {
-        //         branch 'feature'
-        //     }
-        //     steps {
-        //         script {
-        //             build(job: 'ci-task-app', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
-        //         }
-        //     }
-        // }
+        stage('Trigger Main Branch Build') {
+            when {
+                branch 'feature'
+            }
+            steps {
+                script {
+                    build(job: 'ci-task-app', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+                }
+            }
+        }
     }
 }
