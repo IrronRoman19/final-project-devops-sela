@@ -126,6 +126,10 @@ pipeline {
                     def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS_ID} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
                     echo "PR List: ${prList}"
 
+                    if (prList == '[]') {
+                        error "No open pull requests found for branch: ${env.BRANCH_NAME}"
+                    }
+
                     def jsonSlurper = new groovy.json.JsonSlurper()
                     def prListParsed = jsonSlurper.parseText(prList)
                     echo "Parsed PR List: ${prListParsed}"
