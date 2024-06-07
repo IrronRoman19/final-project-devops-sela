@@ -16,7 +16,6 @@ pipeline {
         DOCKER_IMAGE = 'irronroman19/task-app'
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
-        // GITHUB_CREDENTIALS = 'irronroman19:{GIT_TOKEN}'
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
@@ -101,31 +100,19 @@ pipeline {
                     """
                     echo "PR Payload: ${createPRPayload}"
 
-                    withCredentials([string(credentialsId: '{GIT_TOKEN}', variable: 'GIT_TOKEN')]) {
-                        def createPRResponse = sh(
-                            script: """
-                                curl -u irronroman19:$GIT_TOKEN -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
-                            """,
-                            returnStdout: true
-                        ).trim()
+                    def createPRResponse = sh(
+                        script: """
+                            curl -u irronroman19:${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '${createPRPayload}'
+                        """,
+                        returnStdout: true
+                    ).trim()
 
-                        echo "Create PR Response: ${createPRResponse}"
+                    echo "Create PR Response: ${createPRResponse}"
 
-                        def jsonResponse = new groovy.json.JsonSlurper().parseText(createPRResponse)
-                        if (jsonResponse.message) {
-                            error "Failed to create PR: ${jsonResponse.message}"
-                        }
+                    def jsonResponse = new groovy.json.JsonSlurper().parseText(createPRResponse)
+                    if (jsonResponse.message) {
+                        error "Failed to create PR: ${jsonResponse.message}"
                     }
-                }
-            }
-        }
-
-        stage('Print Environment Variables') {
-            steps {
-                script {
-                    echo "GITHUB_REPO: ${env.GITHUB_REPO}"
-                    echo "GITHUB_USERNAME: ${env.GITHUB_USERNAME}"
-                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
                 }
             }
         }
