@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     // // Import GitHub token from Jenkins credentials
-                    withCredentials([string(credentialsId: 'GITHUB_CREDENTIALS', variable: 'git-token')]) {
+                    withCredentials([string(credentialsId: 'GITHUB_CREDENTIALS', variable: 'GITHUB_TOKEN')]) {
                         def createPR = """
                             curl -u ${env.GITHUB_USERNAME}:${env.GITHUB_CREDENTIALS} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
                                 "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
