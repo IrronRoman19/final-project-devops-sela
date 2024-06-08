@@ -123,15 +123,17 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'git-secret', variable: 'GIT_TOKEN')]) {
-                        def prList = sh(script: "curl -u ${env.GITHUB_USERNAME}:${env.GIT_TOKEN} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
+                        def prList = sh(script: """
+                            curl -u ${env.GITHUB_USERNAME}:${GIT_TOKEN} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}
+                        """, returnStdout: true).trim()
                         def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
-                        def approvePR = """
-                            curl -u ${env.GITHUB_USERNAME}:${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
-                                "body": "Approved by Jenkins",
-                                "event": "APPROVE"
+                        echo "Pull request number: ${prNumber}"
+                        def notifyUser = """
+                            curl -u ${env.GITHUB_USERNAME}:${GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/issues/${prNumber}/comments -d '{
+                                "body": "Please review and approve this PR: https://github.com/${env.GITHUB_REPO}/pull/${prNumber}"
                             }'
                         """
-                        sh approvePR
+                        sh(script: notifyUser)
                     }
                 }
             }
