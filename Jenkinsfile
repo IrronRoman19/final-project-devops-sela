@@ -139,18 +139,18 @@ pipeline {
             }
         }
 
-        stage('Trigger Main Branch Build') {
-            when {
-                branch 'feature'
-            }
-            steps {
-                script {
-                    def jobName = 'ci-task-app'
-                    def parameters = [string(name: 'BRANCH_NAME', value: 'main')]
-                    def result = build(job: jobName, parameters: parameters, wait: false)
-                    echo "Triggered job: ${result}"
-                }
-            }
-        }
+        // stage('Trigger Main Branch Build') {
+        //     when {
+        //         branch 'feature'
+        //     }
+        //     steps {
+        //         script {
+        //             def jobName = 'ci-task-app'
+        //             def parameters = [string(name: 'BRANCH_NAME', value: 'main')]
+        //             def result = build(job: jobName, parameters: parameters, wait: false)
+        //             echo "Triggered job: ${result}"
+        //         }
+        //     }
+        // }
     }
 }
