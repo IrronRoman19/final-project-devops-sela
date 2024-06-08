@@ -17,7 +17,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-token'
         GITHUB_REPO = 'IrronRoman19/final-project-devops-sela'
         GITHUB_USERNAME = 'irronroman19'
-        GITHUB_TOKEN = credentials('git-token')
+        GITHUB_TOKEN = credentials('git-secret')
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
     }
@@ -91,7 +91,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'git-token', variable: 'GIT_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'git-secret', variable: 'GIT_TOKEN')]) {
                         def createPR = """
                             curl -u ${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
                                 "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
