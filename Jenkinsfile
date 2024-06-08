@@ -122,10 +122,9 @@ pipeline {
             }
             steps {
                 script {
+                    def prList = sh(script: "curl -u ${env.GIT_TOKEN} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
+                    def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
                     withCredentials([string(credentialsId: 'git-secret', variable: 'GIT_TOKEN')]) {
-                        def prList = sh(script: "curl -u ${env.GIT_TOKEN} -H \"Accept: application/vnd.github.v3+json\" https://api.github.com/repos/${env.GITHUB_REPO}/pulls?head=${env.GITHUB_USERNAME}:${env.BRANCH_NAME}", returnStdout: true).trim()
-                        def prNumber = new groovy.json.JsonSlurper().parseText(prList).find { it.head.ref == "${env.BRANCH_NAME}" }.number
-
                         def approvePR = """
                             curl -u ${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/reviews -d '{
                                 "body": "Approved by Jenkins",
