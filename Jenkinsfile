@@ -145,7 +145,10 @@ pipeline {
             }
             steps {
                 script {
-                    build(job: 'ci-task-app', parameters: [string(name: 'BRANCH_NAME', value: 'main')])
+                    def jobName = 'ci-task-app' 
+                    def parameters = [string(name: 'BRANCH_NAME', value: 'main')]
+                    def result = build(job: jobName, parameters: parameters, wait: false)
+                    echo "Triggered job: ${result}"
                 }
             }
         }
