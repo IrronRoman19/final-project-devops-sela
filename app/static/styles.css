@@ -29,6 +29,7 @@ header {
   
 nav {
     background: linear-gradient(45deg, orange, yellow, lightyellow);
+    justify-content: space-between;
     grid-column: span 6;
 }
 
