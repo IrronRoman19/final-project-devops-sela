@@ -16,5 +16,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: irronroman19/task-app

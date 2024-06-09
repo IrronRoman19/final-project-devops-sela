@@ -28,7 +28,7 @@ header {
 }
   
 nav {
-    background: linear-gradient(45deg, lime, yellow, lightyellow);
+    background: linear-gradient(45deg, gold, yellow, lightyellow);
     justify-content: space-between;
     grid-column: span 6;
 }
@@ -38,7 +38,7 @@ main {
 }
 
 form {
-    background: linear-gradient(45deg, white, lightblue, lightgreen);
+    background: linear-gradient(45deg, white, lightyellow, yellow);
     margin: 5px;
     padding: 5px;
     text-align: center;
