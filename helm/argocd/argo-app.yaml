@@ -9,6 +9,12 @@ spec:
     repoURL: 'https://github.com/IrronRoman19/final-project-devops-sela'
     targetRevision: main
     path: helm/task-app
+    helm:
+      parameters:
+        - name: image.repository
+          value: irronroman19/task-app
+        - name: image.tag
+          value: latest
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default
