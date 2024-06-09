@@ -7,7 +7,7 @@ html {
     text-align: center;
     align-items: center;
     font-size: x-large;
-    background: linear-gradient(45deg, blue, cyan, lightblue, white);
+    background: linear-gradient(45deg, cyan, lightblue, white);
     box-sizing: border-box;
 }
 
@@ -37,7 +37,7 @@ main {
 }
 
 form {
-    background: linear-gradient(45deg, white, lightblue, cyan);
+    background: linear-gradient(45deg, white, lightblue, lightgreen);
     margin: 5px;
     padding: 5px;
     text-align: center;
