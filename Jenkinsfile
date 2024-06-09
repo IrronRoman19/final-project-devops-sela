@@ -78,7 +78,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_CREDENTIALS_ID) {
-                        dockerImage.push("${env.BRANCH_NAME}-${env.BUILD_ID}")
+                        dockerImage.push("${env.BUILD_ID}")
                         dockerImage.push('latest')
                     }
                 }
