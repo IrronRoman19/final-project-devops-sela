@@ -3,7 +3,9 @@ replicaCount: 1
 image:
   repository: irronroman19/task-app
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
+  pullSecrets:
+    - name: dockerhub-secret-argo
 
 service:
   type: NodePort
