@@ -12,8 +12,6 @@ spec:
       labels:
         app: task-app
     spec:
-      imagePullSecrets:
-      - name: {{ .Values.image.pullSecrets[0] }}
       containers:
       - name: task-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -39,3 +37,5 @@ spec:
               name: mongo-secret
               key: mongo-root-password
         resources: {{ toYaml .Values.resources | indent 10 }}
+      imagePullSecrets:
+      - name: dockerhub-secret-argo
