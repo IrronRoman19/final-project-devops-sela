@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: irronroman19/task-app
+    argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
   source:
