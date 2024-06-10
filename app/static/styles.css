@@ -100,7 +100,7 @@ td {
 
 #status-pending {
     background-color: gold;
-    color: brown;
+    color: darkslategray;
 }
 
 #status-completed {
