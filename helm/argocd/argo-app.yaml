@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  source:
     repoURL: 'https://github.com/IrronRoman19/final-project-devops-sela'
     targetRevision: main
     path: helm/task-app
