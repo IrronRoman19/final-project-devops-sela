@@ -28,7 +28,7 @@ header {
 }
   
 nav {
-    background: linear-gradient(45deg, gold, yellow, lightyellow);
+    background: linear-gradient(45deg, lime, yellow, lightyellow);
     justify-content: space-between;
     grid-column: span 6;
 }
@@ -100,10 +100,10 @@ td {
 
 #status-pending {
     background-color: gold;
-    color: black;
+    color: brown;
 }
 
 #status-completed {
-    background-color: green;
-    color: white;
+    background-color: lime;
+    color: darkgreen;
 }
