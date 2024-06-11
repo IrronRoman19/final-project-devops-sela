@@ -15,6 +15,7 @@ spec:
       containers:
       - name: task-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5000
         env:
@@ -37,5 +38,3 @@ spec:
               name: mongo-secret
               key: mongo-root-password
         resources: {{ toYaml .Values.resources | indent 10 }}
-      imagePullSecrets:
-      - name: dockerhub-secret-argo
