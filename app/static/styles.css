@@ -29,7 +29,7 @@ header {
   
 nav {
     background: linear-gradient(45deg, lime, yellow, lightyellow);
-    justify-content: space-between;
+    justify-content: space-evenly;
     grid-column: span 6;
 }
 
@@ -100,11 +100,18 @@ td {
 }
 
 #status-pending {
-    background: linear-gradient(gold, yellow, gold);
+    background: linear-gradient(45deg, gold, yellow);
     color: black;
 }
 
 #status-completed {
-    background: linear-gradient(green, lime, green);
-    color: black;
+    background: linear-gradient(45deg, green, lime);
+    color: white;
+}
+
+.navi-menu {
+    width: 20px;
+    height: 10px;
+    border: 1px solid darkcyan;
+    background: linear-gradient(45deg, lightyellow, yellow);
 }
