@@ -16,4 +16,4 @@ data:
       - match: '*'
         notify: true
         strategy: latest
-        interval: 5m
+        interval: 1m
