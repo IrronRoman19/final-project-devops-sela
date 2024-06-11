@@ -4,8 +4,16 @@ metadata:
   name: argocd-image-updater-config
   namespace: argocd
 data:
-  config.yaml: |
+  registries.conf: |
     registries:
-      docker.io:
-        credentials: dockerhub-secret
+      - name: Docker Hub
         api_url: https://index.docker.io/v1/
+        ping: true
+        credentials: null
+  config.yaml: |
+    log.level: info
+    image-updaters:
+      - match: '*'
+        notify: true
+        strategy: latest
+        interval: 5m
