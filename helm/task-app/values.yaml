@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: irronroman19/task-app
-  tag: {{ .Values.image.tag }}
+  tag: latest
   pullPolicy: Always
 
 service:
