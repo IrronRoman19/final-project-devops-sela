@@ -89,7 +89,7 @@ table {
 }
 
 th {
-    background-color: teal;
+    background: linear-gradient(darkblue, blue);
     color: white;
 }
 
