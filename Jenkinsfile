@@ -71,20 +71,6 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_CREDENTIALS_ID) {
-                        dockerImage.push("${env.BUILD_ID}")
-                        dockerImage.push('latest')
-                    }
-                }
-            }
-        }
-
         stage('Create Pull Request') {
             when {
                 branch 'feature'
@@ -131,6 +117,20 @@ pipeline {
                             curl -u ${env.GITHUB_USERNAME}:${env.GIT_TOKEN} -X PUT -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls/${prNumber}/merge
                         """
                         sh(mergePR)
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', env.DOCKER_CREDENTIALS_ID) {
+                        dockerImage.push("${env.BUILD_ID}")
+                        dockerImage.push('latest')
                     }
                 }
             }
