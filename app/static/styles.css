@@ -38,7 +38,7 @@ main {
 }
 
 form {
-    background: linear-gradient(45deg, white, lightyellow, yellow);
+    background: linear-gradient(45deg, lightblue, lightyellow, yellow);
     margin: 5px;
     padding: 5px;
     text-align: center;
