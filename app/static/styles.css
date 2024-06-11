@@ -108,10 +108,3 @@ td {
     background: linear-gradient(45deg, green, lime);
     color: white;
 }
-
-.navi-menu {
-    width: 30%;
-    height: 90%;
-    border: 1px solid darkcyan;
-    background: linear-gradient(45deg, lightyellow, yellow);
-}
