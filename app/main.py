@@ -32,7 +32,7 @@ tasks_collection = lambda: g.db.tasks
 
 @app.route('/')
 def home():
-    tasks = list(tasks_collection().find())
+    tasks = list(tasks_collection().find().sort('destination', 1))
     return render_template('index.html', tasks=tasks, str=str)
 
 @app.route('/create', methods=['GET', 'POST'])
