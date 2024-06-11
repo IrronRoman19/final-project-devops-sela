@@ -3,15 +3,14 @@ kind: Application
 metadata:
   name: cd-task-app
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: irronroman19/task-app
 spec:
   project: default
   source:
     repoURL: 'https://github.com/IrronRoman19/final-project-devops-sela'
     targetRevision: main
     path: helm/task-app
-    helm:
-      valueFiles:
-        - secret.yaml
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default
