@@ -100,11 +100,11 @@ td {
 }
 
 #status-pending {
-    background-color: gold;
-    color: darkslategray;
+    background: linear-gradient(gold, yellow, gold);
+    color: black;
 }
 
 #status-completed {
-    background-color: lime;
-    color: darkgreen;
+    background: linear-gradient(green, lime, green);
+    color: black;
 }
