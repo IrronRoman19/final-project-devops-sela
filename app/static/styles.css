@@ -110,8 +110,8 @@ td {
 }
 
 .navi-menu {
-    width: 20px;
-    height: 10px;
+    width: 30%;
+    height: 90%;
     border: 1px solid darkcyan;
     background: linear-gradient(45deg, lightyellow, yellow);
 }
