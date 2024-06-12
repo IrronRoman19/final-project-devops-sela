@@ -25,5 +25,5 @@ spec:
     matchLabels:
       app: task-db
   endpoints:
-  - port: 9216
+  - port: 27017
     interval: 15s
