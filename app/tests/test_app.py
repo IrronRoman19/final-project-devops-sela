@@ -35,7 +35,7 @@ def setup_database(db):
     tasks_collection.delete_many({})
 
 def test_count_tasks(client):
-    response = client.get('/count')
+    response = client.get('/count', follow_redirects=True)
     assert response.status_code == 200
     assert b'Count Tasks' in response.data
 
