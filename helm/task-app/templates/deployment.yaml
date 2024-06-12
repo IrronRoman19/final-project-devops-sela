@@ -11,11 +11,13 @@ spec:
     metadata:
       labels:
         app: task-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
     spec:
       containers:
       - name: task-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 5000
         env:

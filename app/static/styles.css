@@ -78,11 +78,11 @@ h1 {
 
 p {
     font-size: 16px;
-    color: black;
+    color: teal;
 }
 
 table, th, tr, td {
-    border: 1px solid black;
+    border: 1px solid gray;
 }
 
 table {
@@ -101,7 +101,7 @@ td {
 
 #status-pending {
     background: linear-gradient(45deg, gold, yellow);
-    color: black;
+    color: darkslategray;
 }
 
 #status-completed {

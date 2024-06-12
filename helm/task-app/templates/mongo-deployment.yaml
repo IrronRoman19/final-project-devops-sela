@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: task-db
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: task-db
@@ -11,6 +11,9 @@ spec:
     metadata:
       labels:
         app: task-db
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9216" # Prometheus MongoDB Exporter default port
     spec:
       containers:
       - name: mongo
