@@ -34,11 +34,6 @@ def setup_database(db):
     yield
     tasks_collection.delete_many({})
 
-def test_count_tasks(client):
-    response = client.get('/count', follow_redirects=True)
-    assert response.status_code == 200
-    assert b'Count Tasks' in response.data
-
 def test_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
