@@ -95,7 +95,7 @@ th {
 }
 
 td {
-    background-color: lightyellow;
+    background: linear-gradient(lightyellow, white);
     color: navy;
 }
 

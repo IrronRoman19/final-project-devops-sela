@@ -34,6 +34,11 @@ def setup_database(db):
     yield
     tasks_collection.delete_many({})
 
+def test_count_created_items(client):
+    response = client.get('/count')
+    assert response.status_code == 200
+    assert b'2' in response.data
+
 def test_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
