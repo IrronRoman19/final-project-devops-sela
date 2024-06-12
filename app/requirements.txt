@@ -3,3 +3,4 @@ datetime
 pymongo
 pytest
 pytest-flask
+prometheus-flask-exporter

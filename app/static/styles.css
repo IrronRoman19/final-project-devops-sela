@@ -28,7 +28,7 @@ header {
 }
   
 nav {
-    background: linear-gradient(45deg, lime, yellow, lightyellow);
+    background: linear-gradient(45deg, lime, lightgreen, lightyellow);
     justify-content: space-evenly;
     grid-column: span 6;
 }
