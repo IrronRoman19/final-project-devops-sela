@@ -32,10 +32,16 @@ def teardown_db(exception):
 
 tasks_collection = lambda: g.db.tasks
 
+@app.route('/count')
+def count():
+    count = tasks_collection().count_documents({})
+    return str(count)
+
 @app.route('/')
 def home():
     tasks = list(tasks_collection().find().sort('destination', 1))
-    return render_template('index.html', tasks=tasks, str=str)
+    task_count = tasks_collection().count_documents({})
+    return render_template('index.html', tasks=tasks, task_count=task_count, str=str)
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():

@@ -42,7 +42,8 @@ form {
     margin: 5px;
     padding: 5px;
     text-align: center;
-    border: 1px solid black;
+    color: darkslategray;
+    border: 1px solid gray;
     width: 98%;
     height: 80%;
 }
