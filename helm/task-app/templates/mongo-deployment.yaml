@@ -13,7 +13,7 @@ spec:
         app: task-db
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "27017" # Prometheus MongoDB Exporter default port
+        prometheus.io/port: "9216" # Prometheus MongoDB Exporter default port
     spec:
       containers:
       - name: mongo
