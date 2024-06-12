@@ -11,7 +11,8 @@ spec:
     port: {{ .Values.mongo.service.port }}
     nodePort: {{ .Values.mongo.service.nodePort | default 30002 }}
     targetPort: {{ .Values.mongo.service.port }}
+    name: mongo
   - protocol: TCP
     port: 9216
     targetPort: 9216
-    name: exporter    
+    name: exporter
