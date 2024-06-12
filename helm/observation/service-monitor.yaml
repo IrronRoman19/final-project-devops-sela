@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-app
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: task-app
+  endpoints:
+  - port: web
+    path: /metrics
+    interval: 30s
+
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-db
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: task-db
+  endpoints:
+  - port: mongo
+    path: /metrics
+    interval: 30s
