@@ -3,8 +3,10 @@ from datetime import datetime
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 
 def get_db():
     if 'db' not in g:
