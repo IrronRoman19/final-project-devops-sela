@@ -28,6 +28,32 @@ persistence:
     - ReadWriteOnce
   size: 1Gi
 
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: localhost
+      paths:
+        - path: /ci
+          serviceName: jenkins
+          servicePort: 8080
+        - path: /cd
+          serviceName: argocd-server
+          servicePort: 8089
+        - path: /monitor
+          serviceName: prometheus-server
+          servicePort: 9090
+        - path: /observe
+          serviceName: grafana
+          servicePort: 3000
+        - path: /database
+          serviceName: task-db
+          servicePort: 27017
+
+
+
 resources: {}
 
 nodeSelector: {}
