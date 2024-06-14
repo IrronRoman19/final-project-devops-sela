@@ -37,11 +37,23 @@ def count():
     count = tasks_collection().count_documents({})
     return str(count)
 
+@app.route('/count_completed')
+def count_completed():
+    completed_count = tasks_collection().count_documents({'completed': True})
+    return str(completed_count)
+
+@app.route('/count_uncompleted')
+def count_uncompleted():
+    uncompleted_count = tasks_collection().count_documents({'completed': False})
+    return str(uncompleted_count)
+
 @app.route('/')
 def home():
     tasks = list(tasks_collection().find().sort('destination', 1))
     task_count = tasks_collection().count_documents({})
-    return render_template('index.html', tasks=tasks, task_count=task_count, str=str)
+    completed_count = tasks_collection().count_documents({'completed': True})
+    uncompleted_count = tasks_collection().count_documents({'completed': False})
+    return render_template('index.html', tasks=tasks, task_count=task_count, completed_count=completed_count, uncompleted_count=uncompleted_count, str=str)
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():

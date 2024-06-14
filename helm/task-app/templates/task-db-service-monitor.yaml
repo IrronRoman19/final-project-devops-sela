@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-db
+  labels:
+    release: prometheus-operator
+spec:
+  selector:
+    matchLabels:
+      app: task-db
+  endpoints:
+  - port: 9216
+    interval: 15s

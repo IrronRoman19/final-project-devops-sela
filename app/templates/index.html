@@ -19,8 +19,20 @@
         </nav>
 
         <main>
-            <h2>Total Tasks: {{ task_count }}</h2>
-            <table>
+            <table id="total_table">
+                <tr>
+                    <th>Total Tasks</th>
+                    <th>Completed Tasks</th>
+                    <th>Uncompleted Tasks</th>
+                </tr>
+                <tr>
+                    <td>{{ task_count }}</td>
+                    <td>{{ completed_count }}</td>
+                    <td>{{ uncompleted_count }}</td>
+                </tr>
+            </table>
+
+            <table id="task_table">
                 <tr>
                     <th>Full name</th>
                     <th>Task name</th>
