@@ -90,14 +90,39 @@ table {
     width: 100%;
 }
 
-th {
+#task_table > th {
     background: linear-gradient(darkblue, blue);
     color: white;
 }
 
-td {
+#task_table > td {
     background: linear-gradient(lightyellow, white);
     color: navy;
+}
+
+#task_table > th {
+    background: linear-gradient(darkgreen, lime);
+    color: white;
+}
+
+#task_table > td {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+#task_table > td:nth-child(1) {
+    background: linear-gradient(cyan, lightcyan);
+    color: teal;
+}
+
+#task_table > td:nth-child(2) {
+    background: linear-gradient(lime, lightgreen);
+    color: green;
+}
+
+#task_table > td:nth-child(3) {
+    background: linear-gradient(yellow, lightyellow);
+    color: darkgoldenrod;
 }
 
 #status-pending {

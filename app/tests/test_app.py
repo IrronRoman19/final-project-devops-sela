@@ -39,6 +39,16 @@ def test_count_created_items(client):
     assert response.status_code == 200
     assert b'2' in response.data
 
+def test_count_completed_items(client):
+    response = client.get('/count_completed')
+    assert response.status_code == 200
+    assert b'0' in response.data
+
+def test_count_uncompleted_items(client):
+    response = client.get('/count_uncompleted')
+    assert response.status_code == 200
+    assert b'2' in response.data
+
 def test_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
