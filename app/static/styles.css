@@ -90,37 +90,37 @@ table {
     width: 100%;
 }
 
-#task_table > th {
+.task_table > th {
     background: linear-gradient(darkblue, blue);
     color: white;
 }
 
-#task_table > td {
+.task_table > td {
     background: linear-gradient(lightyellow, white);
     color: navy;
 }
 
-#total_table > th {
+.total_table > th {
     background: linear-gradient(darkgreen, lime);
     color: white;
 }
 
-#total_table > td {
+.total_table > td {
     font-size: x-large;
     font-weight: bold;
 }
 
-#total_table > td:nth-child(1) {
+.total_table > td:nth-child(1) {
     background: linear-gradient(cyan, lightcyan);
     color: teal;
 }
 
-#total_table > td:nth-child(2) {
+.total_table > td:nth-child(2) {
     background: linear-gradient(lime, lightgreen);
     color: green;
 }
 
-#total_table > td:nth-child(3) {
+.total_table > td:nth-child(3) {
     background: linear-gradient(yellow, lightyellow);
     color: darkgoldenrod;
 }
