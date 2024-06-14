@@ -19,42 +19,42 @@
         </nav>
 
         <main>
-            <table class="total_table">
+            <table>
                 <tr>
-                    <th>Total Tasks</th>
-                    <th>Completed Tasks</th>
-                    <th>Uncompleted Tasks</th>
+                    <th class="total_table_headline">Total Tasks</th>
+                    <th class="total_table_headline">Completed Tasks</th>
+                    <th class="total_table_headline">Uncompleted Tasks</th>
                 </tr>
                 <tr>
-                    <td>{{ task_count }}</td>
-                    <td>{{ completed_count }}</td>
-                    <td>{{ uncompleted_count }}</td>
+                    <td class="total_table_line" id="count_task_line">{{ task_count }}</td>
+                    <td class="total_table_line" id="count_task_line_complete">{{ completed_count }}</td>
+                    <td class="total_table_line" id="count_task_line_uncomplete">{{ uncompleted_count }}</td>
                 </tr>
             </table>
 
-            <table class="task_table">
+            <table>
                 <tr>
-                    <th>Full name</th>
-                    <th>Task name</th>
-                    <th>Description</th>
-                    <th>Destination datetime</th>
-                    <th>Datetime of creation</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="task_table_headline">Full name</th>
+                    <th class="task_table_headline">Task name</th>
+                    <th class="task_table_headline">Description</th>
+                    <th class="task_table_headline">Destination datetime</th>
+                    <th class="task_table_headline">Datetime of creation</th>
+                    <th class="task_table_headline">Status</th>
+                    <th class="task_table_headline">Actions</th>
                 </tr>
                 {% for task in tasks %}
                 <tr>
-                    <td>{{ task.full_name }}</td>
-                    <td>{{ task.task_name }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.destination }}</td>
-                    <td>{{ task.creation_date }}</td>
+                    <td class="task_table_line">{{ task.full_name }}</td>
+                    <td class="task_table_line">{{ task.task_name }}</td>
+                    <td class="task_table_line">{{ task.description }}</td>
+                    <td class="task_table_line">{{ task.destination }}</td>
+                    <td class="task_table_line">{{ task.creation_date }}</td>
                     {% if not task.completed %}
                     <td id="status-pending">{{ 'Pending' }}</td>
                     {% else %}
                     <td id="status-completed">{{ 'Completed' }}</td>
                     {% endif %}
-                    <td>
+                    <td class="task_table_line">
                         {% if not task.completed %}
                         <a href="{{ url_for('complete', task_id=str(task._id)) }}" onclick="return confirm('Are you sure you want to finish this task?');">O</a>
                         {% else %}
