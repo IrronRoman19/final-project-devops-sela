@@ -28,7 +28,11 @@ pipeline {
                 checkout scm
                 script {
                     def initEnv = { echo 'Environment setup initialized' }
-                    def getUniqueBuildIdentifier = { suffix = '' -> System.currentTimeMillis().toString() + (suffix ? '-' + suffix : '') }
+                    def getUniqueBuildIdentifier = { suffix = '' ->
+                        def now = new Date()
+                        def formattedDate = now.format("yyyyMMdd-HHmmss", TimeZone.getTimeZone('UTC'))
+                        return formattedDate + (suffix ? '-' + suffix : '')
+                    }
                     initEnv()
                     def id = getUniqueBuildIdentifier()
                     if (env.BRANCH_NAME == 'main') {
@@ -71,7 +75,7 @@ pipeline {
             }
         }
 
-        stage('Create Pull Request') {
+        stage('Create Pull Request (feature)') {
             when {
                 branch 'feature'
             }
@@ -91,7 +95,7 @@ pipeline {
             }
         }
 
-        stage('Manual Approval') {
+        stage('Manual Approval (feature)') {
             when {
                 branch 'feature'
             }
@@ -102,7 +106,7 @@ pipeline {
             }
         }
 
-        stage('Merge Feature Branch') {
+        stage('Merge Feature Branch (feature)') {
             when {
                 branch 'feature'
             }
@@ -122,7 +126,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image (main)') {
             when {
                 branch 'main'
             }
