@@ -91,7 +91,7 @@ table {
 }
 
 .task_table_headline {
-    background: linear-gradient(darkblue, blue);
+    background: linear-gradient(45deg, darkblue, blue);
     color: white;
     font-style: italic;
 }
@@ -102,7 +102,7 @@ table {
 }
 
 .total_table_headline {
-    background: linear-gradient(teal, cyan);
+    background: linear-gradient(45deg, teal, cyan);
     color: white;
     font-style: italic;
 }
