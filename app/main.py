@@ -62,7 +62,7 @@ def create():
         task_name = request.form['task_name']
         description = request.form['description']
         destination = request.form['destination']
-        creation_date = datetime.utc().strftime('%d/%m/%Y %H:%M')
+        creation_date = datetime.now().strftime('%d/%m/%Y %H:%M')
 
         destination_datetime = datetime.strptime(destination, '%Y-%m-%dT%H:%M')
 
