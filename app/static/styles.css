@@ -28,7 +28,7 @@ header {
 }
   
 nav {
-    background: linear-gradient(45deg, lime, lightgreen, lightyellow);
+    background: linear-gradient(45deg, gray, lightgray, white);
     justify-content: space-evenly;
     grid-column: span 6;
 }
@@ -93,6 +93,7 @@ table {
 .task_table_headline {
     background: linear-gradient(darkblue, blue);
     color: white;
+    font-style: italic;
 }
 
 .task_table_line {
@@ -101,27 +102,28 @@ table {
 }
 
 .total_table_headline {
-    background: linear-gradient(darkgreen, lime);
+    background: linear-gradient(teal, cyan);
     color: white;
+    font-style: italic;
 }
 
 .total_table_line {
-    font-size: x-large;
+    font-size: xx-large;
     font-weight: bold;
 }
 
 #count_task_line {
-    background: linear-gradient(cyan, lightcyan);
+    background: linear-gradient(45deg, cyan, lightcyan);
     color: teal;
 }
 
 #count_task_line_complete {
-    background: linear-gradient(lime, lightgreen);
+    background: linear-gradient(45deg, lime, lightgreen);
     color: green;
 }
 
 #count_task_line_uncomplete {
-    background: linear-gradient(yellow, lightyellow);
+    background: linear-gradient(45deg, yellow, lightyellow);
     color: darkgoldenrod;
 }
 
