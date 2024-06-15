@@ -62,9 +62,9 @@ def create():
         task_name = request.form['task_name']
         description = request.form['description']
         destination = request.form['destination']
-        creation_date = datetime.now().strftime('%d/%m/%Y %H:%M')
+        creation_date = datetime.now().strftime('%Y/%m/%d %H:%M')
 
-        destination_datetime = datetime.strptime(destination, '%Y-%m-%dT%H:%M')
+        destination_datetime = datetime.strptime(destination, '%Y/%m/%dT%H:%M')
 
         tasks_collection().insert_one({
             'full_name': full_name,
@@ -91,12 +91,12 @@ def edit(task_id):
             'full_name': request.form['full_name'],
             'task_name': request.form['task_name'],
             'description': request.form['description'],
-            'destination': datetime.strptime(request.form['destination'], '%Y-%m-%dT%H:%M')
+            'destination': datetime.strptime(request.form['destination'], '%Y/%m/%dT%H:%M')
         }
         tasks_collection().update_one({'_id': ObjectId(task_id)}, {'$set': updated_task})
         return redirect(url_for('home'))
     # Format the date for the form
-    task['destination'] = task['destination'].strftime('%Y-%m-%dT%H:%M')
+    task['destination'] = task['destination'].strftime('%Y/%m/%dT%H:%M')
     return render_template('edit.html', task=task, str=str)
 
 @app.route('/complete/<task_id>')
