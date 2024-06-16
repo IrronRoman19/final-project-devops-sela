@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from main import app, get_db
 
-
+# Connect to testing database in MongoDB
 @pytest.fixture(scope='module')
 def client():
     app.config['TESTING'] = True
@@ -16,6 +16,7 @@ def client():
     with app.test_client() as client:
         yield client
 
+# Get testing database in MongoDB
 @pytest.fixture(scope='module')
 def db():
     with app.app_context():
@@ -24,6 +25,7 @@ def db():
         client = db.client
         client.drop_database('task_db_test')
 
+# Setup test database in MongoDB
 @pytest.fixture(autouse=True)
 def setup_database(db):
     tasks_collection = db.tasks
@@ -34,26 +36,31 @@ def setup_database(db):
     yield
     tasks_collection.delete_many({})
 
+# Test count total items
 def test_count_created_items(client):
     response = client.get('/count')
     assert response.status_code == 200
     assert b'2' in response.data
 
+# Test count completed items
 def test_count_completed_items(client):
     response = client.get('/count_completed')
     assert response.status_code == 200
     assert b'0' in response.data
 
+# Test count uncompleted items
 def test_count_uncompleted_items(client):
     response = client.get('/count_uncompleted')
     assert response.status_code == 200
     assert b'2' in response.data
 
+# Test home page
 def test_home_page(client):
     response = client.get('/')
     assert response.status_code == 200
     assert b'Task App' in response.data
 
+# Test create task
 def test_create_task(client):
     response = client.post('/create', data={
         'full_name': 'John Doe',
@@ -64,6 +71,7 @@ def test_create_task(client):
     assert response.status_code == 200
     assert b'New Task' in response.data
 
+# Test edit task
 def test_edit_task(client):
     with app.app_context():
         task_id = get_db().tasks.find_one({'full_name': 'John Doe'})['_id']
@@ -76,6 +84,7 @@ def test_edit_task(client):
     assert response.status_code == 200
     assert b'Updated Task' in response.data
 
+# Test complete task
 def test_complete_task(client):
     with app.app_context():
         task_id = get_db().tasks.find_one({'full_name': 'John Doe'})['_id']
@@ -83,6 +92,7 @@ def test_complete_task(client):
     assert response.status_code == 200
     assert b'Completed' in response.data
 
+# Test uncomplete task
 def test_uncomplete_task(client):
     with app.app_context():
         task_id = get_db().tasks.find_one({'full_name': 'John Doe'})['_id']
@@ -90,6 +100,7 @@ def test_uncomplete_task(client):
     assert response.status_code == 200
     assert b'Pending' in response.data
 
+# Test delete task
 def test_delete_task(client):
     with app.app_context():
         task_id = get_db().tasks.find_one({'full_name': 'John Doe'})['_id']
