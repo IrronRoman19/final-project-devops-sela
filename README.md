@@ -14,7 +14,7 @@ Most importantly in the app, when deploying to K8s cluster with Helm, you can se
 
 ### Infrastructure
 
-All of Infrastracture that you will find out below, works in Kind K8s cluster that contains namespaces: default, jenkins, argocd and observation.
+All of Infrastracture that you will find out below, works in Kind K8s cluster that works locally in local machine and contains namespaces: default, jenkins, argocd and observation.
 
 ##### Default namespace
 
@@ -35,6 +35,8 @@ Jenkins server responsibles for CI processes and running CI pipelines (feature, 
 * prometheus:2.2.3
 * github-oauth:588.vf696a_350572a_
 * github:1.39.0
+* prometheus:773.v3b_62d8178eec
+* pipeline-stage-view:2.33
 
 In addition, Jenkins server connected to GitHub repository and Docker Hub image. Jenkins server works in port 8080 (with using type NodePort).
 
@@ -44,9 +46,9 @@ ArgoCD server responsibles for CD process and deploying the updated app. Also, A
 
 ##### Observation namespace
 
-Prometheus server responsibles for observation metrics from application pods. Prometheus server works in port 9090 (with using type NodePort).
+Prometheus server responsibles for observation metrics from application pods. In this project using metrics to observe CPU usage and Memory usage in app pods. Prometheus server works in port 9090 (with using type NodePort).
 
-Grafana server pulls metrics from Prometheus servers relevant metrics. Grafana server works in port 3000 (with using type NodePort).
+Grafana server imports the above metrics from Prometheus servers relevant metrics. Grafana server works in port 3000 (with using type NodePort).
 
 ### Pipelines
 
@@ -77,3 +79,11 @@ There have CI/CD pipelines that work in Jenskins with using CI multibranch pipel
 
 * When latest Docker Image have changed, Application will synchronized.
 * After sync app, it will automaticly install new task-app pod and terminates old task-app pod.
+
+## Instructions:
+
+1. Deploy Kind K8s cluster: [Instructions](./instructions/kind/README.md).
+2. Deploy Python Task applicaiton + MongoDB database: [Instructions](./instructions/task-app/README.md).
+3. Deploy Jenkins: [Instructions](./instructions/jenkins/README.md).
+4. Deploy ArgoCD: [Instructions](./instructions/argocd/README.md).
+5. Deploy Monitoring (Prometheus + Grafana): [Instructions](./instructions/observation/README.md).
