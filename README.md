@@ -12,6 +12,38 @@ In addition, for using CI pipeline in Jenkins, after building image, checking wi
 
 Most importantly in the app, when deploying to K8s cluster with Helm, you can see that application contains two pods: task-app and task-db. I want to certain you even if you delete the task-app or task-db pod, data will be saved because data saved in MongoDB volume.
 
+##### Home page - You can see all existing tasks:
+
+![./images/preview1.png](./images/preview1.png)
+
+##### Create task (click "+ Create Task +" in nav menu) - with navigating to Create task page:
+
+![./images/preview2.png](./images/preview2.png)
+
+##### After that task was created, it redirects to Home page:
+
+![./images/preview3.png](./images/preview3.png)
+
+##### Edit task with choosing task (Click "E" in table) - Navigates to edit task page:
+
+![./images/preview4.png](./images/preview4.png)
+
+##### After that task was edited, it redirects to Home page:
+
+![./images/preview5.png](./images/preview5.png)
+
+##### Click "O" in table to complete the task:
+
+![./images/preview6.png](./images/preview6.png)
+
+##### Click "O" in table to uncomplete the task:
+
+![./images/preview7.png](./images/preview7.png)
+
+##### Click "X" in table to remove the task:
+
+![./images/preview8.png](./images/preview8.png)
+
 ### Infrastructure
 
 All of Infrastracture that you will find out below, works in Kind K8s cluster that works locally in local machine and contains namespaces: default, jenkins, argocd and observation.
@@ -82,8 +114,8 @@ There have CI/CD pipelines that work in Jenskins with using CI multibranch pipel
 
 ## Instructions:
 
-1. Deploy Kind K8s cluster: [Instructions](./instructions/kind/README.md).
-2. Deploy Python Task applicaiton + MongoDB database: [Instructions](./instructions/task-app/README.md).
-3. Deploy Jenkins: [Instructions](./instructions/jenkins/README.md).
-4. Deploy ArgoCD: [Instructions](./instructions/argocd/README.md).
-5. Deploy Monitoring (Prometheus + Grafana): [Instructions](./instructions/observation/README.md).
+1. [Deploy Kind K8s cluster](./instructions/kind/README.md).
+2. [Deploy Python Task applicaiton + MongoDB database](./instructions/task-app/README.md).
+3. [Deploy Jenkins](./instructions/jenkins/README.md).
+4. [Deploy ArgoCD](./instructions/argocd/README.md).
+5. [Deploy Monitoring (Prometheus + Grafana)](./instructions/observation/README.md).
