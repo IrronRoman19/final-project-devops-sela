@@ -20,6 +20,7 @@ pipeline {
         GITHUB_TOKEN = credentials('git-secret')
         MONGO_DB_HOST = 'task-db.default.svc.cluster.local'
         MONGO_DB_PORT = '27017'
+        JIRA_ISSUE_KEY = ''
     }
 
     stages {
@@ -41,6 +42,13 @@ pipeline {
                         env.BUILD_ID = "0." + id
                     }
                     currentBuild.displayName += " {build-name:" + env.BUILD_ID + "}"
+                    
+                    // Extract Jira issue key from branch name
+                    def branchName = env.BRANCH_NAME
+                    def match = branchName =~ /([A-Z]+-\d+)/
+                    if (match) {
+                        env.JIRA_ISSUE_KEY = match[0][1]
+                    }
                 }
             }
         }
@@ -86,7 +94,8 @@ pipeline {
                             curl -u ${env.GITHUB_USERNAME}:${env.GIT_TOKEN} -X POST -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${env.GITHUB_REPO}/pulls -d '{
                                 "title": "Auto PR from Jenkins: ${env.BUILD_ID}",
                                 "head": "${env.BRANCH_NAME}",
-                                "base": "main"
+                                "base": "main",
+                                "body": "This PR addresses ${env.JIRA_ISSUE_KEY}"
                             }'
                         """
                         sh createPR
