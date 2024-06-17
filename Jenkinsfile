@@ -85,7 +85,7 @@ pipeline {
 
         stage('Create Pull Request (feature)') {
             when {
-                branch 'feature/*'
+                branch 'feature'
             }
             steps {
                 script {
@@ -106,7 +106,7 @@ pipeline {
 
         stage('Manual Approval (feature)') {
             when {
-                branch 'feature/*'
+                branch 'feature'
             }
             steps {
                 script {
@@ -117,7 +117,7 @@ pipeline {
 
         stage('Merge Feature Branch (feature)') {
             when {
-                branch 'feature/*'
+                branch 'feature'
             }
             steps {
                 script {
